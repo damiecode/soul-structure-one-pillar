@@ -1,5 +1,5 @@
-import React from 'react';
-import { AssessmentQuestion } from '../types';
+import React from "react";
+import { AssessmentQuestion } from "../types";
 
 interface QuestionComponentProps {
   question: AssessmentQuestion;
@@ -9,7 +9,10 @@ interface QuestionComponentProps {
   currentAnswer?: number;
 }
 
-const ProgressBar: React.FC<{ current: number; total: number }> = ({ current, total }) => {
+const ProgressBar: React.FC<{ current: number; total: number }> = ({
+  current,
+  total,
+}) => {
   const percentage = (current / total) * 100;
   return (
     <div className="w-full bg-gray-200/50 rounded-full h-2 mb-4 overflow-hidden">
@@ -26,14 +29,14 @@ const QuestionComponent: React.FC<QuestionComponentProps> = ({
   questionNumber,
   totalQuestions,
   onAnswer,
-  currentAnswer
+  currentAnswer,
 }) => {
   const ratings = [
-    { score: 1, label: 'Strongly Disagree' },
-    { score: 2, label: 'Disagree' },
-    { score: 3, label: 'Neutral / Unsure' },
-    { score: 4, label: 'Agree' },
-    { score: 5, label: 'Strongly Agree' },
+    { score: 1, label: "Strongly Disagree" },
+    { score: 2, label: "Disagree" },
+    { score: 3, label: "Neutral / Unsure" },
+    { score: 4, label: "Agree" },
+    { score: 5, label: "Strongly Agree" },
   ];
 
   return (
@@ -53,8 +56,8 @@ const QuestionComponent: React.FC<QuestionComponentProps> = ({
             onClick={() => onAnswer(score)}
             className={`w-full text-left p-4 rounded-xl border transition-all duration-200 ease-in-out transform hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-accent-green/80 animate-fade-in-up ${
               currentAnswer === score
-                ? 'bg-accent-green border-accent-green text-white shadow-lg'
-                : 'bg-white/50 border-gray-200 text-primary hover:bg-white hover:border-accent-green/50 hover:shadow-md'
+                ? "bg-accent-green border-accent-green text-white shadow-lg"
+                : "bg-white/50 border-gray-200 text-primary hover:bg-white hover:border-accent-green/50 hover:shadow-md"
             }`}
             style={{ animationDelay: `${index * 75}ms` }}
           >

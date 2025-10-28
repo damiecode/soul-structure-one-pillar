@@ -1,73 +1,226 @@
-import React from 'react';
-import { Result } from '../types';
-
-interface PillarIndicatorProps {
-  state: string;
-  color: string;
-}
-
-const PillarIndicator: React.FC<PillarIndicatorProps> = ({ state, color }) => (
-    <div className="flex flex-col items-center mb-6">
-        <div className="relative w-32 h-32 flex items-center justify-center">
-             <div className="absolute inset-0 rounded-full blur-2xl" style={{ backgroundColor: color, opacity: 0.4 }}></div>
-             <div className="relative w-24 h-24 rounded-full flex items-center justify-center" style={{ backgroundColor: `${color}20` }}>
-                 <div className="w-16 h-16 rounded-full" style={{ backgroundColor: color }}></div>
-             </div>
-        </div>
-        <div 
-            className="mt-4 text-xl font-bold font-serif px-5 py-1.5 rounded-full"
-            style={{ color: color, backgroundColor: `${color}20` }}
-        >
-            {state}
-        </div>
-    </div>
-);
-
+import React, { useState } from "react";
+import { Result } from "../types";
+import CategoryBar from "./CategoryBar.tsx";
 
 interface ResultsComponentProps {
   result: Result;
-  onRetake: () => void;
+  onRestart: () => void;
 }
 
-const ResultsComponent: React.FC<ResultsComponentProps> = ({ result, onRetake }) => {
-  const { score, interpretation } = result;
+const ICONS: { [key: string]: React.ReactNode } = {
+  Nourishment: (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      className="h-8 w-8 text-accent-green"
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke="currentColor"
+      strokeWidth="2"
+    >
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"
+      />
+    </svg>
+  ),
+  Movement: (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      className="h-8 w-8 text-accent-green"
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke="currentColor"
+      strokeWidth="2"
+    >
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="M13 10V3L4 14h7v7l9-11h-7z"
+      />
+    </svg>
+  ),
+  "Rest & Recovery": (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      className="h-8 w-8 text-accent-green"
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke="currentColor"
+      strokeWidth="2"
+    >
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"
+      />
+    </svg>
+  ),
+  "Body Mindset": (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      className="h-8 w-8 text-accent-green"
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke="currentColor"
+      strokeWidth="2"
+    >
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+      />
+    </svg>
+  ),
+};
+
+const ResultsComponent: React.FC<ResultsComponentProps> = ({
+  result,
+  onRestart,
+}) => {
+  const [email, setEmail] = useState("");
+  const [emailStatus, setEmailStatus] = useState<
+    "idle" | "sending" | "sent" | "error"
+  >("idle");
+  const [statusMessage, setStatusMessage] = useState("");
+
+  const { interpretation, categoryScores } = result;
+
+  const handleSendEmail = async () => {
+    if (!email || !email.includes("@")) {
+      setStatusMessage("Please enter a valid email address.");
+      setEmailStatus("error");
+      return;
+    }
+
+    setEmailStatus("sending");
+    setStatusMessage("");
+
+    // This relative path will correctly point to your Vercel serverless function.
+    const endpoint = "/api/send-email";
+
+    const subject = "Your Soul Structure: Strength Pillar Results";
+
+    let body = `Hello,\n\nHere are your personalized results from the Strength Pillar Assessment:\n\n`;
+    body += `------------------------------------\n\n`;
+    body += `YOUR PILLAR STATE: ${interpretation.state}\n\n`;
+    body += `${interpretation.narrative}\n\n`;
+    body += `------------------------------------\n\n`;
+    body += `YOUR STRENGTH PROFILE BREAKDOWN:\n`;
+    Object.entries(categoryScores).forEach(([key, value]) => {
+      body += `- ${key}: ${value.toFixed(1)} / 5\n`;
+    });
+    body += `\n------------------------------------\n\n`;
+    body += `With gratitude,\nThe Soul Structure Workshop`;
+
+    try {
+      const response = await fetch(endpoint, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ to: email, subject, body }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Server responded with an error.");
+      }
+
+      setEmailStatus("sent");
+      setStatusMessage("Success! Your results have been sent to your email.");
+    } catch (error) {
+      console.error("Failed to send email:", error);
+      setEmailStatus("error");
+      setStatusMessage("Something went wrong. Please try again later.");
+    }
+  };
 
   return (
-    <div className="bg-cream/80 backdrop-blur-sm p-8 sm:p-12 rounded-3xl shadow-xl text-center animate-fade-in border border-white/50">
-        <h1 className="text-3xl font-serif font-bold text-primary mb-4">Your Alignment Pillar</h1>
-        
-        <PillarIndicator state={interpretation.state} color={interpretation.color} />
-        
-        <p className="text-6xl font-serif font-bold" style={{ color: interpretation.color }}>
-            {score.toFixed(1)}
-        </p>
-        <p className="text-primary/60 mb-8">Average Score</p>
-      
-        <div className="text-left bg-white/30 p-6 rounded-xl my-8">
-            <h3 className="font-serif font-bold text-xl text-primary mb-2">A Gentle Insight:</h3>
-            <p className="text-primary/80 leading-relaxed font-sans">{interpretation.narrative}</p>
-        </div>
+    <div className="bg-cream/80 backdrop-blur-sm p-8 sm:p-12 rounded-3xl shadow-xl w-full animate-fade-in border border-white/50 text-center">
+      <h2 className="text-3xl sm:text-4xl font-serif text-primary mb-4">
+        Your Result
+      </h2>
+      <div
+        className="px-4 py-2 rounded-full inline-block text-lg font-bold mb-6"
+        style={{ backgroundColor: interpretation.color, color: "white" }}
+      >
+        {interpretation.state} Pillar
+      </div>
+      <p className="text-primary/90 mb-8 text-lg leading-relaxed text-left">
+        {interpretation.narrative}
+      </p>
 
-      <div className="bg-accent-green/10 border border-accent-green/20 rounded-2xl p-6 sm:p-8">
-        <h3 className="text-2xl font-serif font-bold text-accent-green mb-2">Continue Your Journey</h3>
-        <p className="text-primary/70 mb-5 max-w-md mx-auto">
-            Alignment is the first of seven pillars. The full Soul Structure Workshop is a guided journey to wholeness.
+      <div className="mt-8 pt-6 border-t border-gray-200 animate-fade-in-up">
+        <h3 className="text-2xl font-serif text-primary mb-4">
+          Your Strength Profile Breakdown
+        </h3>
+        <p className="text-primary/80 mb-8 max-w-prose mx-auto">
+          Here’s a closer look at your alignment across the core areas of
+          physical wellness. These visuals help pinpoint your strengths and
+          areas for gentle focus.
         </p>
-        <a 
-            href="#" 
-            className="inline-block bg-accent-green text-white font-bold py-3 px-8 rounded-full hover:bg-green-700 transition-all duration-300 transform hover:-translate-y-1 shadow-lg hover:shadow-xl focus:outline-none focus:ring-4 focus:ring-offset-2 focus:ring-accent-green/50"
-            onClick={(e) => e.preventDefault()} // Placeholder link
-        >
-            Explore the Full Workshop
-        </a>
+        <div className="space-y-6 text-left">
+          {Object.entries(categoryScores).map(([label, score]) => (
+            <div
+              key={label}
+              className="flex items-center gap-4 animate-fade-in-up"
+            >
+              <div className="flex-shrink-0 bg-accent-green/10 p-3 rounded-full">
+                {ICONS[label]}
+              </div>
+              <div className="w-full">
+                <CategoryBar label={label} score={score} />
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
 
-      <button
-        onClick={onRetake}
-        className="mt-8 text-primary/60 font-semibold hover:text-primary transition-colors underline decoration-dotted"
-      >
-        Retake the Assessment
-      </button>
+      <div className="mt-12 pt-8 border-t border-gray-200 animate-fade-in-up">
+        <h3 className="text-2xl font-serif text-primary mb-4">
+          Save Your Results
+        </h3>
+        <p className="text-primary/80 mb-4">
+          Enter your email below and we'll send a copy of your results to your
+          inbox.
+        </p>
+        <div className="flex flex-col sm:flex-row gap-2">
+          <input
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="your.email@example.com"
+            className="flex-grow p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent-green/80 focus:outline-none disabled:bg-gray-200"
+            aria-label="Email address"
+            disabled={emailStatus === "sending"}
+          />
+          <button
+            onClick={handleSendEmail}
+            className="bg-primary text-white font-bold py-3 px-6 rounded-lg hover:bg-primary/90 transition-colors disabled:bg-primary/50 disabled:cursor-not-allowed"
+            disabled={emailStatus === "sending"}
+          >
+            {emailStatus === "sending" ? "Sending..." : "Send to My Email"}
+          </button>
+        </div>
+        {statusMessage && (
+          <p
+            className={`mt-3 text-sm ${
+              emailStatus === "error" ? "text-red-600" : "text-accent-green"
+            }`}
+          >
+            {statusMessage}
+          </p>
+        )}
+      </div>
+
+      <div className="mt-12 text-center">
+        <button
+          onClick={onRestart}
+          className="bg-transparent border-2 border-primary/50 text-primary font-bold py-3 px-8 rounded-xl text-lg hover:bg-primary/10 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary/80"
+        >
+          Start Over
+        </button>
+      </div>
     </div>
   );
 };

@@ -1,9 +1,8 @@
-
 export enum PillarState {
-  Strong = 'Strong',
-  Growing = 'Growing',
-  Unsteady = 'Unsteady',
-  Fragile = 'Fragile'
+  Strong = "Strong",
+  Growing = "Growing",
+  Unsteady = "Unsteady",
+  Fragile = "Fragile",
 }
 
 export interface ScoreInterpretation {
