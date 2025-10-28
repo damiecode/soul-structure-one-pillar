@@ -213,12 +213,31 @@ const ResultsComponent: React.FC<ResultsComponentProps> = ({
         )}
       </div>
 
+      <div className="mt-12 pt-8 border-t border-gray-200 animate-fade-in-up text-center">
+        <h3 className="text-2xl font-serif text-primary mb-4">
+          Continue Your Journey
+        </h3>
+        <p className="text-primary/80 mb-6 max-w-prose mx-auto">
+          Your results are just the beginning. The full Soul Structure Workshop
+          offers a deep dive into all pillars of your being, providing the tools
+          and community to build a life of purpose and wholeness.
+        </p>
+        <a
+          href="https://soulstructure.co"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-block bg-accent-gold text-white font-bold py-3 px-10 rounded-xl text-lg hover:bg-accent-gold/90 transition-all duration-300 transform hover:-translate-y-0.5 shadow-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-accent-gold/80"
+        >
+          Register for the Workshop
+        </a>
+      </div>
+
       <div className="mt-12 text-center">
         <button
           onClick={onRestart}
-          className="bg-transparent border-2 border-primary/50 text-primary font-bold py-3 px-8 rounded-xl text-lg hover:bg-primary/10 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary/80"
+          className="bg-transparent text-primary/70 font-bold py-2 px-6 rounded-xl hover:bg-primary/10 transition-all duration-300"
         >
-          Start Over
+          Take the Assessment Again
         </button>
       </div>
     </div>
