@@ -2,7 +2,7 @@ import { Resend } from "resend";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
-const VERIFIED_FROM_EMAIL = "results@your-verified-domain.com";
+const VERIFIED_FROM_EMAIL = "results@tosinsanni.com";
 
 export default async function handler(req, res) {
   res.setHeader(
