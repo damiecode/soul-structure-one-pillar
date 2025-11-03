@@ -87,45 +87,45 @@ const ResultsComponent: React.FC<ResultsComponentProps> = ({
 
   const { interpretation, categoryScores } = result;
 
-const handleSendEmail = async () => {
-  if (!email || !email.includes("@")) {
-    setStatusMessage("Please enter a valid email address.");
-    setEmailStatus("error");
-    return;
-  }
+  const handleSendEmail = async () => {
+    if (!email || !email.includes("@")) {
+      setStatusMessage("Please enter a valid email address.");
+      setEmailStatus("error");
+      return;
+    }
 
-  setEmailStatus("sending");
-  setStatusMessage("");
-  const endpoint = "/api/send-email";
-  const subject = "Your Soul Structure: Strength Pillar Results";
+    setEmailStatus("sending");
+    setStatusMessage("");
+    const endpoint = "/api/send-email";
+    const subject = "Your Soul Structure: Strength Pillar Results";
 
-  // Use your new HTML template
-  const htmlBody = buildSoulStructureEmail(interpretation, categoryScores);
+    // Use your new HTML template
+    const htmlBody = buildSoulStructureEmail(interpretation, categoryScores);
 
-  try {
-    const response = await fetch(endpoint, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ to: email, subject, html: htmlBody }),
-    });
+    try {
+      const response = await fetch(endpoint, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ to: email, subject, html: htmlBody }),
+      });
 
-    if (!response.ok) throw new Error("Server responded with an error.");
+      if (!response.ok) throw new Error("Server responded with an error.");
 
-    setEmailStatus("sent");
-    setStatusMessage("Success! Your results have been sent to your email.");
+      setEmailStatus("sent");
+      setStatusMessage("Success! Your results have been sent to your email.");
 
-    // Wait a moment so the user can see the message, then redirect
-    setTimeout(() => {
-      window.location.href = "https://tosinsanni.com/soulstructureworkshop/";
-    }, 2000); // 2 seconds delay
-  } catch (error) {
-    console.error("Failed to send email:", error);
-    setEmailStatus("error");
-    setStatusMessage("Something went wrong. Please try again later.");
-  }
-};
+      // Wait a moment so the user can see the message, then redirect
+      setTimeout(() => {
+        window.location.href = "https://tosinsanni.com/soulstructureworkshop/";
+      }, 2000); // 2 seconds delay
+    } catch (error) {
+      console.error("Failed to send email:", error);
+      setEmailStatus("error");
+      setStatusMessage("Something went wrong. Please try again later.");
+    }
+  };
 
   return (
     <div className="bg-cream/80 backdrop-blur-sm p-8 sm:p-12 rounded-3xl shadow-xl w-full animate-fade-in border border-white/50 text-center">
@@ -194,14 +194,31 @@ const handleSendEmail = async () => {
             {emailStatus === "sending" ? "Sending..." : "Send to My Email"}
           </button>
         </div>
-        {statusMessage && (
-          <p
-            className={`mt-3 text-sm ${
-              emailStatus === "error" ? "text-red-600" : "text-accent-green"
-            }`}
-          >
-            {statusMessage}
-          </p>
+        {emailStatus === "sent" && (
+          <div className="mt-6 p-6 bg-accent-green/10 rounded-xl border border-accent-green/30 text-center animate-fade-in">
+            <h4 className="text-lg font-semibold text-accent-green mb-2">
+              🎉 Your results have been sent!
+            </h4>
+            <p className="text-primary/80 mb-4">
+              Check your inbox for your personalized Soul Structure insights.
+            </p>
+            <div className="flex justify-center gap-3 flex-wrap">
+              <a
+                href="https://tosinsanni.com/soulstructureworkshop/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="bg-accent-gold text-white px-6 py-3 rounded-lg font-bold hover:bg-accent-gold/90 transition"
+              >
+                Go to Workshop
+              </a>
+              <button
+                onClick={onRestart}
+                className="border border-accent-green text-accent-green px-6 py-3 rounded-lg font-bold hover:bg-accent-green/10 transition"
+              >
+                Take the Assessment Again
+              </button>
+            </div>
+          </div>
         )}
       </div>
 
