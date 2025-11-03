@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Result } from "../types";
 import CategoryBar from "./CategoryBar.tsx";
+import { buildSoulStructureEmail } from "./emailTemplate.ts";
 
 interface ResultsComponentProps {
   result: Result;
@@ -86,54 +87,45 @@ const ResultsComponent: React.FC<ResultsComponentProps> = ({
 
   const { interpretation, categoryScores } = result;
 
-  const handleSendEmail = async () => {
-    if (!email || !email.includes("@")) {
-      setStatusMessage("Please enter a valid email address.");
-      setEmailStatus("error");
-      return;
-    }
+const handleSendEmail = async () => {
+  if (!email || !email.includes("@")) {
+    setStatusMessage("Please enter a valid email address.");
+    setEmailStatus("error");
+    return;
+  }
 
-    setEmailStatus("sending");
-    setStatusMessage("");
-    const endpoint = "/api/send-email";
+  setEmailStatus("sending");
+  setStatusMessage("");
+  const endpoint = "/api/send-email";
+  const subject = "Your Soul Structure: Strength Pillar Results";
 
-    const subject = "Your Soul Structure: Strength Pillar Results";
+  // Use your new HTML template
+  const htmlBody = buildSoulStructureEmail(interpretation, categoryScores);
 
-    let body = `Hello,\n\nHere are your personalized results from the Strength Pillar Assessment:\n\n`;
-    body += `------------------------------------\n\n`;
-    body += `YOUR PILLAR STATE: ${interpretation.state}\n\n`;
-    body += `${interpretation.narrative}\n\n`;
-    body += `------------------------------------\n\n`;
-    body += `YOUR STRENGTH PROFILE BREAKDOWN:\n`;
-    Object.entries(categoryScores as Record<string, number>).forEach(
-      ([key, value]) => {
-        body += `- ${key}: ${value.toFixed(1)} / 5\n`;
-      }
-    );
-    body += `\n------------------------------------\n\n`;
-    body += `With gratitude,\nThe Soul Structure Workshop`;
+  try {
+    const response = await fetch(endpoint, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ to: email, subject, html: htmlBody }),
+    });
 
-    try {
-      const response = await fetch(endpoint, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ to: email, subject, body }),
-      });
+    if (!response.ok) throw new Error("Server responded with an error.");
 
-      if (!response.ok) {
-        throw new Error("Server responded with an error.");
-      }
+    setEmailStatus("sent");
+    setStatusMessage("Success! Your results have been sent to your email.");
 
-      setEmailStatus("sent");
-      setStatusMessage("Success! Your results have been sent to your email.");
-    } catch (error) {
-      console.error("Failed to send email:", error);
-      setEmailStatus("error");
-      setStatusMessage("Something went wrong. Please try again later.");
-    }
-  };
+    // Wait a moment so the user can see the message, then redirect
+    setTimeout(() => {
+      window.location.href = "https://tosinsanni.com/soulstructureworkshop/";
+    }, 2000); // 2 seconds delay
+  } catch (error) {
+    console.error("Failed to send email:", error);
+    setEmailStatus("error");
+    setStatusMessage("Something went wrong. Please try again later.");
+  }
+};
 
   return (
     <div className="bg-cream/80 backdrop-blur-sm p-8 sm:p-12 rounded-3xl shadow-xl w-full animate-fade-in border border-white/50 text-center">
