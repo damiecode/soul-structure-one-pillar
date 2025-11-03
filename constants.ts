@@ -2,76 +2,76 @@ import { AssessmentQuestion, PillarState, ScoreInterpretation } from "./types";
 
 export const ASSESSMENT_QUESTIONS: AssessmentQuestion[] = [
   {
-    text: "I eat foods that nourish and energize me rather than deplete me.",
+    text: "I generally believe people are kind and trustworthy unless proven otherwise.",
     reverseCoded: false,
   },
   {
-    text: "I often skip meals, eat mindlessly, or ignore my body’s hunger cues.",
+    text: "I often expect people to hurt, disappoint, or leave me.",
     reverseCoded: true,
   },
   {
-    text: "I enjoy movement or exercise that feels good to my body.",
+    text: "I believe healthy relationships require both honesty and grace.",
     reverseCoded: false,
   },
   {
-    text: "I see exercise as punishment for eating or for how my body looks.",
+    text: "I have at least a few relationships where I feel emotionally safe and deeply seen.",
+    reverseCoded: false,
+  },
+  {
+    text: "I often hide my true feelings because I fear being judged or misunderstood.",
     reverseCoded: true,
   },
   {
-    text: "I get enough sleep and feel rested when I wake up.",
+    text: "I can count on the people in my life to show up for me when I truly need support.",
     reverseCoded: false,
   },
   {
-    text: "I often push through exhaustion or deny myself rest to keep working.",
+    text: 'I can say "no" without feeling guilty or afraid of losing people\'s approval.',
+    reverseCoded: false,
+  },
+  {
+    text: "I often prioritize others' comfort over my own wellbeing.",
     reverseCoded: true,
   },
   {
-    text: "I take time to notice and respond to signs of physical fatigue, tension, or pain.",
+    text: "I communicate my needs clearly, even when it feels uncomfortable.",
     reverseCoded: false,
   },
   {
-    text: "I treat my body with kindness, respect, and gratitude.",
+    text: "My relationships feel mutually supportive — I give and receive love in healthy measure.",
     reverseCoded: false,
   },
   {
-    text: "I feel disconnected from my body or often resent how it looks or feels.",
+    text: "I often feel resentful because I over-give or overextend myself for others.",
     reverseCoded: true,
   },
   {
-    text: "I intentionally slow down or take breaks during busy days to restore energy.",
+    text: "I am learning to let people help me, instead of feeling like I must do everything alone.",
     reverseCoded: false,
   },
   {
-    text: "I frequently feel stressed, tense, or physically unwell due to constant pressure.",
-    reverseCoded: true,
-  },
-  {
-    text: "I am mindful of what I consume — not just food, but media, noise, and emotional energy.",
+    text: "I can freely express my opinions, even when they differ from those of people I care about.",
     reverseCoded: false,
   },
   {
-    text: "I feel strong, balanced, and present in my body most days.",
+    text: "I have friendships where I experience fun, laughter, and lightness.",
     reverseCoded: false,
   },
   {
-    text: "I experience frequent headaches, stomach tension, or other stress-related discomforts.",
-    reverseCoded: true,
+    text: "I feel comfortable initiating connections and nurturing relationships that matter to me.",
+    reverseCoded: false,
   },
   {
-    text: "I feel guilty or lazy when I rest or take time off.",
-    reverseCoded: true,
-  },
-  {
-    text: "I see my body as a partner in purpose, deserving of care, rest, and nourishment.",
+    text: "I can end or redefine relationships that no longer align with my peace or purpose.",
     reverseCoded: false,
   },
 ];
 
 export const ASSESSMENT_CATEGORIES: { [key: string]: number[] } = {
-  Nourishment: [0, 1, 11],
-  Movement: [2, 3],
-  "Rest & Recovery": [4, 5, 9, 14],
-  "Body Mindset": [6, 7, 8, 10, 12, 13, 15],
+  "Trust & Safety": [0, 1, 3, 4, 5],
+  "Boundaries & Balance": [6, 7, 8, 10, 15],
+  "Mutual Support": [2, 9, 11],
+  "Authentic Expression": [12, 13, 14],
 };
 
 export const SCORE_INTERPRETATIONS: {
@@ -80,25 +80,25 @@ export const SCORE_INTERPRETATIONS: {
   [PillarState.Strong]: {
     state: PillarState.Strong,
     narrative:
-      "You have a balanced and nurturing relationship with your body. You eat, rest, and move with intention — not out of guilt or pressure, but out of care. You understand that strength is both physical and soulful, and you honour your body as a sacred partner in your purpose. Keep reinforcing this rhythm through consistent nourishment, joyful movement, and restorative rest.",
+      "You have cultivated relationships that are both nurturing and boundaried. You experience mutual trust, joy, and authenticity in your connections. You know how to show up for others without losing yourself, and you communicate openly while honouring your needs. Continue investing intentionally in your relationships — practicing vulnerability, gratitude, and emotional availability while maintaining healthy boundaries.",
     color: "#6A994E",
   },
   [PillarState.Growing]: {
     state: PillarState.Growing,
     narrative:
-      "You are cultivating a healthier relationship with your body, though you may still struggle with inconsistency or guilt around rest and self-care. You’re learning to listen more closely to your body’s needs and to separate worth from productivity. Continue fine-tuning your routines, paying attention to your body’s cues, and letting love — not pressure — guide your health habits.",
+      "You are building healthier relational patterns and becoming more discerning about who has access to your emotional space. You're learning to communicate your needs, say no without guilt, and find joy in authentic connection. To strengthen this pillar, focus on reinforcing your boundaries, expressing appreciation in your relationships, and allowing yourself to receive love as freely as you give it.",
     color: "#F4A261",
   },
   [PillarState.Unsteady]: {
     state: PillarState.Unsteady,
     narrative:
-      "Your body and mind may not yet feel in sync. You may oscillate between overexertion and neglect, or rely on willpower rather than rhythm. You might experience fatigue, stress-related discomfort, or self-criticism around food, rest, or appearance. This pillar would benefit from gentle recalibration — beginning with self-compassion, structured rest, and professional guidance in nutrition, exercise, or therapy where needed.",
+      "Your relational world feels inconsistent — you may oscillate between closeness and withdrawal, openness and guardedness. There may be traces of over-giving, resentment, or fear of rejection. It is important for you to start observing your patterns with curiosity, not judgment. Lean into safe relationships, seek to heal old wounds that affect trust, and practice balanced reciprocity in your interactions. You may find it deeply helpful to process these patterns in counselling or guided support, where you can learn healthier attachment rhythms and rebuild relational safety.",
     color: "#E76F51",
   },
   [PillarState.Fragile]: {
     state: PillarState.Fragile,
     narrative:
-      "You may feel physically drained, tense, or disconnected from your body. Sleep, nourishment, or movement may be inconsistent or guilt-driven. Your body might be signalling exhaustion or burnout through illness, pain, or emotional fatigue. This is a loving reminder to rebuild trust with your body — to slow down, seek holistic or medical support, and begin nurturing strength through small, consistent acts of care. Healing your relationship with your body will re-anchor your soul’s vitality.",
+      "Relationships may often leave you feeling unseen, drained, or unsafe. You might struggle with trust, boundary-setting, or fear of abandonment. This pillar is signalling the need for relational renewal. To begin healing, create safety within yourself first — reconnect with your sense of worth and seek spaces where you can experience genuine care, healthy support, and the slow rebuilding of trust in others. Working with a trauma-informed counsellor or therapist can offer the structure and safety you need to heal deeply and restore balance in this pillar.",
     color: "#D00000",
   },
 };

@@ -95,8 +95,6 @@ const ResultsComponent: React.FC<ResultsComponentProps> = ({
 
     setEmailStatus("sending");
     setStatusMessage("");
-
-    // This relative path will correctly point to your Vercel serverless function.
     const endpoint = "/api/send-email";
 
     const subject = "Your Soul Structure: Strength Pillar Results";
@@ -107,9 +105,11 @@ const ResultsComponent: React.FC<ResultsComponentProps> = ({
     body += `${interpretation.narrative}\n\n`;
     body += `------------------------------------\n\n`;
     body += `YOUR STRENGTH PROFILE BREAKDOWN:\n`;
-    Object.entries(categoryScores).forEach(([key, value]) => {
-      body += `- ${key}: ${value.toFixed(1)} / 5\n`;
-    });
+    Object.entries(categoryScores as Record<string, number>).forEach(
+      ([key, value]) => {
+        body += `- ${key}: ${value.toFixed(1)} / 5\n`;
+      }
+    );
     body += `\n------------------------------------\n\n`;
     body += `With gratitude,\nThe Soul Structure Workshop`;
 

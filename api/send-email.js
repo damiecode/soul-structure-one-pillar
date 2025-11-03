@@ -1,38 +1,56 @@
-// This is the code for your serverless function: /api/send-email.js
 import { Resend } from "resend";
 
-// The API key you got from Resend.com
 const resend = new Resend(process.env.RESEND_API_KEY);
 
+const VERIFIED_FROM_EMAIL = "results@your-verified-domain.com";
+
 export default async function handler(req, res) {
-  // Allow requests from your website's domain
-  res.setHeader("Access-Control-Allow-Origin", "*"); // For development. Change to your actual domain in production!
+  res.setHeader(
+    "Access-Control-Allow-Origin",
+    "https://soul-structure-one-pillar.vercel.app"
+  );
   res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
   res.setHeader("Access-Control-Allow-Headers", "Content-Type");
 
-  // Handle the browser's pre-flight request
   if (req.method === "OPTIONS") {
     return res.status(200).end();
   }
 
-  // Get the data from the frontend
-  const { to, subject, body } = req.body;
+  if (req.method !== "POST") {
+    return res.status(405).json({ message: "Method Not Allowed" });
+  }
+
+  if (!process.env.RESEND_API_KEY) {
+    console.error("RESEND_API_KEY environment variable is not set.");
+    return res.status(500).json({ message: "Server configuration error." });
+  }
 
   try {
+    const { to, subject, body } = req.body;
+
+    if (!to || !subject || !body) {
+      return res
+        .status(400)
+        .json({ message: "Missing required fields: to, subject, or body." });
+    }
+
     const { data, error } = await resend.emails.send({
-      // IMPORTANT: Resend requires a 'from' address from a domain you've verified.
-      from: "Soul Structure Results <results@your-verified-domain.com>",
+      from: `Soul Structure Workshop <${VERIFIED_FROM_EMAIL}>`,
       to: [to],
       subject: subject,
       text: body,
     });
 
     if (error) {
-      return res.status(400).json(error);
+      console.error("Resend API Error:", error);
+      return res
+        .status(400)
+        .json({ message: "Failed to send email.", details: error.message });
     }
 
-    res.status(200).json({ message: "Email sent successfully!" });
+    return res.status(200).json({ message: "Email sent successfully!", data });
   } catch (error) {
-    res.status(500).json({ message: "An error occurred." });
+    console.error("Generic Server Error:", error);
+    return res.status(500).json({ message: "An unexpected error occurred." });
   }
 }

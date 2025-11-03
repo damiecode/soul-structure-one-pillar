@@ -19,4 +19,5 @@ export interface AssessmentQuestion {
 export interface Result {
   score: number;
   interpretation: ScoreInterpretation;
+  categoryScores: Record<string, number>;
 }

@@ -1,6 +1,5 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-// Fix: Explicitly include the file extension to prevent module resolution errors.
 import App from "./App.tsx";
 
 const rootElement = document.getElementById("root");
