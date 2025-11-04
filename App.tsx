@@ -82,12 +82,13 @@ const App: React.FC = () => {
         From the Soul Structure Workshop
       </p>
       <p className="mt-6 max-w-prose text-primary/90 leading-relaxed">
-        This confidential assessment invites you to reflect on the health of your
-        connections — the depth, safety, and reciprocity in your relationships.
-        Through thoughtful questions, you’ll explore how you give and receive
-        love, set boundaries, and experience belonging. Your responses will
-        reveal a personalized interpretation and an intentional action plan to
-        nurture balance, authenticity, and mutual care in your relational world.
+        This confidential assessment invites you to reflect on the health of
+        your connections — the depth, safety, and reciprocity in your
+        relationships. Through thoughtful questions, you’ll explore how you give
+        and receive love, set boundaries, and experience belonging. Your
+        responses will reveal a personalized interpretation and an intentional
+        action plan to nurture balance, authenticity, and mutual care in your
+        relational world.
       </p>
       <button
         onClick={handleStart}
@@ -109,7 +110,7 @@ const App: React.FC = () => {
           />
         </div>
         <h1 className="text-3xl sm:text-4xl font-serif font-bold text-primary tracking-tight">
-          Strength Pillar Assessment
+          Connection Pillar Assessment
         </h1>
         <p className="text-lg text-primary/80 mt-2 max-w-xl mx-auto">
           A self-assessment from the Soul Structure Workshop
