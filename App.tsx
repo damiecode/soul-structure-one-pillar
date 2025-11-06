@@ -74,12 +74,12 @@ const App: React.FC = () => {
         <img
           src="/kharis_logo.png"
           alt="Kharis Logo"
-          className="h-16 w-auto object-contain"
+          className="h-20  object-contain"
         />
         <img
           src="/ts_logo.png"
           alt="Soul Structure Workshop Logo"
-          className="h-20 w-auto object-contain"
+          className="h-20 w-auto"
         />
       </div>
       <h1 className="text-3xl sm:text-4xl font-serif font-bold text-primary tracking-tight">
