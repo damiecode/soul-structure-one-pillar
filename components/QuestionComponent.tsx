@@ -32,11 +32,11 @@ const QuestionComponent: React.FC<QuestionComponentProps> = ({
   currentAnswer,
 }) => {
   const ratings = [
-    { score: 1, label: "Strongly Disagree" },
-    { score: 2, label: "Disagree" },
-    { score: 3, label: "Neutral / Unsure" },
-    { score: 4, label: "Agree" },
     { score: 5, label: "Strongly Agree" },
+    { score: 4, label: "Agree" },
+    { score: 3, label: "Neutral / Unsure" },
+    { score: 2, label: "Disagree" },
+    { score: 1, label: "Strongly Disagree" },
   ];
 
   return (
