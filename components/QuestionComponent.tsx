@@ -1,8 +1,7 @@
 import React from "react";
-import { AssessmentQuestion } from "../types";
 
 interface QuestionComponentProps {
-  question: AssessmentQuestion; // Changed from string to AssessmentQuestion
+  question: string;
   questionNumber: number;
   totalQuestions: number;
   onAnswer: (score: number) => void;
@@ -29,8 +28,8 @@ const QuestionComponent: React.FC<QuestionComponentProps> = ({
       <h2 className="text-lg font-semibold">
         Question {questionNumber} of {totalQuestions}
       </h2>
-      <p className="text-base text-gray-700">{question.text}</p>{" "}
-      {/* Changed from {question} to {question.text} */}
+      <p className="text-base text-gray-700">{question.text}</p>
+
       <div className="flex flex-col sm:flex-row sm:justify-between gap-2">
         {ratings.map(({ score, label }) => (
           <button
