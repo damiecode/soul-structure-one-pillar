@@ -70,11 +70,18 @@ const App: React.FC = () => {
 
   const renderHomeScreen = () => (
     <div className="text-center animate-fade-in flex flex-col items-center justify-center p-8 bg-cream/80 backdrop-blur-sm rounded-3xl shadow-xl border border-white/50">
-      <img
-        src="/ts_logo.png"
-        alt="Soul Structure Workshop Logo"
-        className="w-30 h-[200px]"
-      />
+      <div className="flex items-center justify-center gap-2 mb-6">
+        <img
+          src="/kharis_logo.png"
+          alt="Kharis Logo"
+          className="h-16 w-auto object-contain"
+        />
+        <img
+          src="/ts_logo.png"
+          alt="Soul Structure Workshop Logo"
+          className="h-20 w-auto object-contain"
+        />
+      </div>
       <h1 className="text-3xl sm:text-4xl font-serif font-bold text-primary tracking-tight">
         Connection Pillar Assessment
       </h1>
@@ -105,6 +112,11 @@ const App: React.FC = () => {
         <div className="inline-block mb-2">
           <img
             src="/ts_logo.png"
+            alt="Soul Structure Workshop Logo"
+            className="w-30 h-[200px]"
+          />
+          <img
+            src="/kharis_logo.png"
             alt="Soul Structure Workshop Logo"
             className="w-30 h-[200px]"
           />
