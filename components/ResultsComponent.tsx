@@ -200,7 +200,9 @@ const ResultsComponent: React.FC<ResultsComponentProps> = ({
               🎉 Your results have been sent!
             </h4>
             <p className="text-primary/80 mb-4">
-              Check your inbox for your personalized Soul Structure insights.
+              Your personalized Soul Structure insights are waiting for you in
+              your inbox. If you don't see them right away, they might be in
+              your promotions folder.
             </p>
             <div className="flex justify-center gap-3 flex-wrap">
               <a
