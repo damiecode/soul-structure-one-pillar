@@ -109,16 +109,16 @@ const App: React.FC = () => {
   const renderAssessment = () => (
     <>
       <header className="text-center mb-8 animate-fade-in">
-        <div className="inline-block mb-2">
+        <div className="flex items-center justify-center gap-2 mb-6">
+          <img
+            src="/kharis_logo.png"
+            alt="Kharis Logo"
+            className="h-20  object-contain"
+          />
           <img
             src="/ts_logo.png"
             alt="Soul Structure Workshop Logo"
-            className="w-30 h-[200px]"
-          />
-          <img
-            src="/kharis_logo.png"
-            alt="Soul Structure Workshop Logo"
-            className="w-30 h-[200px]"
+            className="h-20 w-auto"
           />
         </div>
         <h1 className="text-3xl sm:text-4xl font-serif font-bold text-primary tracking-tight">
