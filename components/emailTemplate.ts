@@ -23,6 +23,8 @@ export function buildSoulStructureEmail(
       options: {
         scales: {
           y: {
+            suggestedMin: 1,
+            suggestedMax: 5,
             beginAtZero: true,
             min: 0,
             max: 5,
@@ -45,6 +47,7 @@ export function buildSoulStructureEmail(
           legend: { display: false },
           title: { display: false },
         },
+        maintainAspectRatio: true,
       },
     })
   )}`;
