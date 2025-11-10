@@ -26,7 +26,6 @@ export default async function handler(req, res) {
   }
 
   try {
-    // ✅ Accept both text (body) and html versions
     const { to, subject, body, html } = req.body;
 
     if (!to || !subject || (!body && !html)) {

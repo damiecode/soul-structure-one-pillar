@@ -23,12 +23,14 @@ export function buildSoulStructureEmail(
       options: {
         scales: {
           y: {
+            beginAtZero: true,
             min: 0,
             max: 5,
             grid: {
               color: "rgba(0,0,0,0.05)",
             },
             ticks: {
+              stepSize: 1,
               font: { size: 14 },
             },
           },
