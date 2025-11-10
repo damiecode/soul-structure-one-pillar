@@ -27,13 +27,13 @@ export function buildSoulStructureEmail(
             suggestedMax: 5,
             type: "linear",
             beginAtZero: true,
-            min: 0,
+            min: 1,
             max: 5,
             grid: {
               color: "rgba(0,0,0,0.05)",
             },
             ticks: {
-              stepSize: 0.5,
+              stepSize: 1,
               font: { size: 14 },
             },
           },
