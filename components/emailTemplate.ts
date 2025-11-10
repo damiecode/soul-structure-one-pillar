@@ -23,18 +23,15 @@ export function buildSoulStructureEmail(
       options: {
         scales: {
           y: {
-            suggestedMin: 1,
-            suggestedMax: 5,
             type: "linear",
-            beginAtZero: true,
-            min: 1.0,
-            max: 5.0,
+            min: 1,
+            max: 5,
+            ticks: {
+              stepSize: 0.5,
+              font: { size: 14 },
+            },
             grid: {
               color: "rgba(0,0,0,0.05)",
-            },
-            ticks: {
-              stepSize: 1,
-              font: { size: 14 },
             },
           },
           x: {
@@ -47,8 +44,37 @@ export function buildSoulStructureEmail(
         plugins: {
           legend: { display: false },
           title: { display: false },
+          tooltip: {
+            enabled: true,
+            backgroundColor: "rgba(42, 42, 42, 0.9)",
+            titleColor: "#ffffff",
+            bodyColor: "#ffffff",
+            borderColor: "#6A994E",
+            borderWidth: 2,
+            padding: 12,
+            displayColors: false,
+            callbacks: {
+              title: function (context) {
+                return context[0].label;
+              },
+              label: function (context) {
+                return "Score: " + context.parsed.y.toFixed(1) + " / 5.0";
+              },
+            },
+          },
+          datalabels: {
+            anchor: "end",
+            align: "top",
+            color: "#2a2a2a",
+            font: {
+              size: 14,
+              weight: "bold",
+            },
+            formatter: function (value) {
+              return value.toFixed(1);
+            },
+          },
         },
-        maintainAspectRatio: true,
       },
     })
   )}`;
