@@ -27,8 +27,8 @@ export function buildSoulStructureEmail(
             suggestedMax: 5,
             type: "linear",
             beginAtZero: true,
-            min: 1,
-            max: 5,
+            min: 1.0,
+            max: 5.0,
             grid: {
               color: "rgba(0,0,0,0.05)",
             },
