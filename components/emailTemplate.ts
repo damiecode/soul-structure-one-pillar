@@ -5,7 +5,7 @@ export function buildSoulStructureEmail(
   interpretation: any,
   categoryScores: any
 ) {
-  const chartUrl = `https://quickchart.io/chart?c=${encodeURIComponent(
+  const chartUrl = `https://quickchart.io/chart?v=4&c=${encodeURIComponent(
     JSON.stringify({
       type: "bar",
       data: {
@@ -25,6 +25,7 @@ export function buildSoulStructureEmail(
           y: {
             suggestedMin: 1,
             suggestedMax: 5,
+            type: "linear",
             beginAtZero: true,
             min: 0,
             max: 5,
@@ -32,7 +33,7 @@ export function buildSoulStructureEmail(
               color: "rgba(0,0,0,0.05)",
             },
             ticks: {
-              stepSize: 1,
+              stepSize: 0.5,
               font: { size: 14 },
             },
           },
