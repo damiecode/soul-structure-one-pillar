@@ -25,7 +25,7 @@ export default async function handler(req, res) {
 
     const { data, error } = await resend.emails.send({
       from: `Soul Structure Workshop <${VERIFIED_FROM_EMAIL}>`,
-      to: [to],
+      to: to,
       subject,
       text: body || "Please view this email in an HTML-compatible client.",
       html: html || undefined,
