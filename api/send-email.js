@@ -61,8 +61,11 @@ export default async function handler(req, res) {
         .json({ message: "Failed to add subscriber to Mailchimp." });
     }
 
-    // 3️⃣ Add tag “SSW Assessment” to subscriber
-    const subscriberHash = Buffer.from(to.toLowerCase()).toString("hex"); // Mailchimp requires MD5 hash of email
+    const crypto = require("crypto");
+    const subscriberHash = crypto
+      .createHash("md5")
+      .update(to.toLowerCase())
+      .digest("hex");
 
     const tagResponse = await fetch(
       `https://${process.env.MAILCHIMP_DC}.api.mailchimp.com/3.0/lists/${process.env.MAILCHIMP_LIST_ID}/members/${subscriberHash}/tags`,
