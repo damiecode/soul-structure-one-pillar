@@ -12,6 +12,7 @@ const ResultsComponent: React.FC<ResultsComponentProps> = ({
   onRestart,
 }) => {
   const [email, setEmail] = useState("");
+  const [name, setName] = useState("");
   const [emailStatus, setEmailStatus] = useState<
     "idle" | "sending" | "sent" | "error"
   >("idle");
@@ -39,7 +40,12 @@ const ResultsComponent: React.FC<ResultsComponentProps> = ({
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ to: email, subject, html: htmlBody }),
+        body: JSON.stringify({
+          to: email,
+          subject,
+          html: htmlBody,
+          name: name.trim() || undefined,
+        }),
       });
 
       if (!response.ok) throw new Error("Server responded with an error.");
@@ -80,6 +86,15 @@ const ResultsComponent: React.FC<ResultsComponentProps> = ({
           </div>
 
           <div className="flex flex-col sm:flex-row gap-2 max-w-2xl mx-auto">
+            <input
+              type="text"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder="Your name"
+              className="w-full p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent-green/80 focus:outline-none disabled:bg-gray-200 text-lg"
+              aria-label="Your name"
+              disabled={emailStatus === "sending"}
+            />
             <input
               type="email"
               value={email}
