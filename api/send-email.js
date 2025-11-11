@@ -12,27 +12,15 @@ export default async function handler(req, res) {
   res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
   res.setHeader("Access-Control-Allow-Headers", "Content-Type");
 
-  if (req.method === "OPTIONS") {
-    return res.status(200).end();
-  }
-
-  if (req.method !== "POST") {
+  if (req.method === "OPTIONS") return res.status(200).end();
+  if (req.method !== "POST")
     return res.status(405).json({ message: "Method Not Allowed" });
-  }
-
-  if (!process.env.RESEND_API_KEY) {
-    console.error("RESEND_API_KEY environment variable is not set.");
-    return res.status(500).json({ message: "Server configuration error." });
-  }
 
   try {
-    const { to, subject, body, html } = req.body;
+    const { to, subject, body, html, name } = req.body;
 
     if (!to || !subject || (!body && !html)) {
-      return res.status(400).json({
-        message:
-          "Missing required fields: to, subject, and either body or html.",
-      });
+      return res.status(400).json({ message: "Missing required fields." });
     }
 
     const { data, error } = await resend.emails.send({
@@ -40,19 +28,62 @@ export default async function handler(req, res) {
       to: [to],
       subject,
       text: body || "Please view this email in an HTML-compatible client.",
-      html: html || undefined, // only include if provided
+      html: html || undefined,
     });
 
     if (error) {
       console.error("Resend API Error:", error);
-      return res.status(400).json({
-        message: "Failed to send email.",
-        details: error.message,
-      });
+      return res.status(400).json({ message: "Failed to send email." });
+    }
+
+    const mailchimpResponse = await fetch(
+      `https://${process.env.MAILCHIMP_DC}.api.mailchimp.com/3.0/lists/${process.env.MAILCHIMP_LIST_ID}/members`,
+      {
+        method: "POST",
+        headers: {
+          Authorization: `apikey ${process.env.MAILCHIMP_API_KEY}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email_address: to,
+          status: "subscribed",
+          merge_fields: { FNAME: name || "" },
+        }),
+      }
+    );
+
+    const mailchimpResult = await mailchimpResponse.json();
+
+    if (!mailchimpResponse.ok && mailchimpResult.title !== "Member Exists") {
+      console.error("Mailchimp API Error:", mailchimpResult);
+      return res
+        .status(400)
+        .json({ message: "Failed to add subscriber to Mailchimp." });
+    }
+
+    // 3️⃣ Add tag “SSW Assessment” to subscriber
+    const subscriberHash = Buffer.from(to.toLowerCase()).toString("hex"); // Mailchimp requires MD5 hash of email
+
+    const tagResponse = await fetch(
+      `https://${process.env.MAILCHIMP_DC}.api.mailchimp.com/3.0/lists/${process.env.MAILCHIMP_LIST_ID}/members/${subscriberHash}/tags`,
+      {
+        method: "POST",
+        headers: {
+          Authorization: `apikey ${process.env.MAILCHIMP_API_KEY}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          tags: [{ name: "SSW Assessment", status: "active" }],
+        }),
+      }
+    );
+
+    if (!tagResponse.ok) {
+      console.error("Mailchimp Tag Error:", await tagResponse.text());
     }
 
     return res.status(200).json({
-      message: "Email sent successfully!",
+      message: "Email sent, subscriber added, and tag applied successfully!",
       data,
     });
   } catch (error) {
