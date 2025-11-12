@@ -4,6 +4,15 @@ import { Resend } from "resend";
 const resend = new Resend(process.env.RESEND_API_KEY);
 const VERIFIED_FROM_EMAIL = "results@tosinsanni.com";
 
+// Helper function to create MD5 hash using Web Crypto API
+async function md5Hash(text) {
+  const encoder = new TextEncoder();
+  const data = encoder.encode(text);
+  const hashBuffer = await crypto.subtle.digest("MD5", data);
+  const hashArray = Array.from(new Uint8Array(hashBuffer));
+  return hashArray.map((b) => b.toString(16).padStart(2, "0")).join("");
+}
+
 export default async function handler(req, res) {
   res.setHeader(
     "Access-Control-Allow-Origin",
@@ -23,6 +32,7 @@ export default async function handler(req, res) {
       return res.status(400).json({ message: "Missing required fields." });
     }
 
+    // Send email via Resend
     const { data, error } = await resend.emails.send({
       from: `Soul Structure Workshop <${VERIFIED_FROM_EMAIL}>`,
       to: to,
@@ -35,8 +45,18 @@ export default async function handler(req, res) {
       console.error("Resend API Error:", error);
       return res.status(400).json({
         message: "Failed to send email.",
-        details: error, // Include the actual error
+        details: error,
       });
+    }
+
+    // Add to Mailchimp
+    const mailchimpBody = {
+      email_address: to,
+      status: "subscribed",
+    };
+
+    if (name && name.trim()) {
+      mailchimpBody.merge_fields = { FNAME: name };
     }
 
     const mailchimpResponse = await fetch(
@@ -47,11 +67,7 @@ export default async function handler(req, res) {
           Authorization: `apikey ${process.env.MAILCHIMP_API_KEY}`,
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-          email_address: to,
-          status: "subscribed",
-          merge_fields: { FNAME: name || "" },
-        }),
+        body: JSON.stringify(mailchimpBody),
       }
     );
 
@@ -59,16 +75,14 @@ export default async function handler(req, res) {
 
     if (!mailchimpResponse.ok && mailchimpResult.title !== "Member Exists") {
       console.error("Mailchimp API Error:", mailchimpResult);
-      return res
-        .status(400)
-        .json({ message: "Failed to add subscriber to Mailchimp." });
+      return res.status(400).json({
+        message: "Failed to add subscriber to Mailchimp.",
+        details: mailchimpResult,
+      });
     }
 
-    const crypto = require("crypto");
-    const subscriberHash = crypto
-      .createHash("md5")
-      .update(to.toLowerCase())
-      .digest("hex");
+    // Add tag
+    const subscriberHash = await md5Hash(to.toLowerCase());
 
     const tagResponse = await fetch(
       `https://${process.env.MAILCHIMP_DC}.api.mailchimp.com/3.0/lists/${process.env.MAILCHIMP_LIST_ID}/members/${subscriberHash}/tags`,

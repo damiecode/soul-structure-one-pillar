@@ -85,7 +85,7 @@ const ResultsComponent: React.FC<ResultsComponentProps> = ({
             </p>
           </div>
 
-          <div className="flex flex-col sm:flex-row gap-2 max-w-2xl mx-auto">
+          <div className="flex flex-col gap-3 max-w-2xl mx-auto mb-4">
             <input
               type="text"
               value={name}
@@ -100,13 +100,13 @@ const ResultsComponent: React.FC<ResultsComponentProps> = ({
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="your.email@example.com"
-              className="flex-grow p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent-green/80 focus:outline-none disabled:bg-gray-200 text-lg"
+              className="w-full p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent-green/80 focus:outline-none disabled:bg-gray-200 text-lg"
               aria-label="Email address"
               disabled={emailStatus === "sending"}
             />
             <button
               onClick={handleSendEmail}
-              className="bg-primary text-white font-bold py-4 px-8 rounded-lg hover:bg-primary/90 transition-colors disabled:bg-primary/50 disabled:cursor-not-allowed text-lg whitespace-nowrap"
+              className="w-full bg-primary text-white font-bold py-4 px-8 rounded-lg hover:bg-primary/90 transition-colors disabled:bg-primary/50 disabled:cursor-not-allowed text-lg"
               disabled={emailStatus === "sending"}
             >
               {emailStatus === "sending" ? "Sending..." : "Get My Results"}
