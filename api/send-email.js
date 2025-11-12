@@ -1,17 +1,9 @@
 export const runtime = "nodejs";
 import { Resend } from "resend";
+import md5 from "md5";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 const VERIFIED_FROM_EMAIL = "results@tosinsanni.com";
-
-// Helper function to create MD5 hash using Web Crypto API
-async function md5Hash(text) {
-  const encoder = new TextEncoder();
-  const data = encoder.encode(text);
-  const hashBuffer = await crypto.subtle.digest("MD5", data);
-  const hashArray = Array.from(new Uint8Array(hashBuffer));
-  return hashArray.map((b) => b.toString(16).padStart(2, "0")).join("");
-}
 
 export default async function handler(req, res) {
   res.setHeader(
@@ -81,8 +73,8 @@ export default async function handler(req, res) {
       });
     }
 
-    // Add tag
-    const subscriberHash = await md5Hash(to.toLowerCase());
+    // Add tag - using md5 package
+    const subscriberHash = md5(to.toLowerCase());
 
     const tagResponse = await fetch(
       `https://${process.env.MAILCHIMP_DC}.api.mailchimp.com/3.0/lists/${process.env.MAILCHIMP_LIST_ID}/members/${subscriberHash}/tags`,
