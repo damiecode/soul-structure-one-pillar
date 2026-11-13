@@ -46,6 +46,12 @@ export default async function handler(req, res) {
         `${process.env.FLODESK_API_KEY}:`
       ).toString("base64");
 
+      const flodeskHeaders = {
+        Authorization: `Basic ${flodeskAuth}`,
+        "Content-Type": "application/json",
+        "User-Agent": "Soul Structure Workshop (soul-structure-one-pillar.vercel.app)",
+      };
+
       const subscriberBody = { email: to };
       if (name && name.trim()) subscriberBody.first_name = name.trim();
       if (process.env.FLODESK_SEGMENT_ID) {
@@ -56,17 +62,42 @@ export default async function handler(req, res) {
         "https://api.flodesk.com/v1/subscribers",
         {
           method: "POST",
-          headers: {
-            Authorization: `Basic ${flodeskAuth}`,
-            "Content-Type": "application/json",
-            "User-Agent": "Soul Structure Workshop (soul-structure-one-pillar.vercel.app)",
-          },
+          headers: flodeskHeaders,
           body: JSON.stringify(subscriberBody),
         }
       );
 
       if (!flodeskResponse.ok) {
         console.error("Flodesk API Error:", await flodeskResponse.text());
+      } else {
+        console.log("Flodesk subscriber saved:", to);
+
+        // Add to the segment explicitly (create can ignore segment_ids)
+        if (process.env.FLODESK_SEGMENT_ID) {
+          const segmentResponse = await fetch(
+            `https://api.flodesk.com/v1/subscribers/${encodeURIComponent(
+              to
+            )}/segments`,
+            {
+              method: "POST",
+              headers: flodeskHeaders,
+              body: JSON.stringify({
+                segment_ids: [process.env.FLODESK_SEGMENT_ID],
+              }),
+            }
+          );
+          if (segmentResponse.ok) {
+            console.log("Flodesk segment added:", process.env.FLODESK_SEGMENT_ID);
+          } else {
+            console.error(
+              "Flodesk Segment Error:",
+              segmentResponse.status,
+              await segmentResponse.text()
+            );
+          }
+        } else {
+          console.warn("FLODESK_SEGMENT_ID is not set; skipping segment.");
+        }
       }
     } catch (flodeskError) {
       console.error("Flodesk request failed:", flodeskError);
