@@ -6,6 +6,7 @@ interface QuestionComponentProps {
   questionNumber: number;
   totalQuestions: number;
   onAnswer: (score: number) => void;
+  onBack?: () => void;
   currentAnswer?: number;
 }
 
@@ -29,28 +30,39 @@ const QuestionComponent: React.FC<QuestionComponentProps> = ({
   questionNumber,
   totalQuestions,
   onAnswer,
+  onBack,
   currentAnswer,
 }) => {
   const ratings = [
-    { score: 5, label: "Strongly Agree" },
-    { score: 4, label: "Agree" },
-    { score: 3, label: "Neutral / Unsure" },
-    { score: 2, label: "Disagree" },
-    { score: 1, label: "Strongly Disagree" },
+    { score: 5, label: "Strongly Agree", hint: "Absolutely true for me" },
+    { score: 4, label: "Agree", hint: "Mostly true for me" },
+    { score: 3, label: "Neutral / Unsure", hint: "Sometimes true, sometimes not" },
+    { score: 2, label: "Disagree", hint: "Mostly untrue for me" },
+    { score: 1, label: "Strongly Disagree", hint: "Absolutely untrue for me" },
   ];
 
   return (
     <div className="bg-cream/80 backdrop-blur-sm p-8 sm:p-12 rounded-3xl shadow-xl w-full animate-fade-in border border-white/50">
       <ProgressBar current={questionNumber} total={totalQuestions} />
-      <p className="text-sm font-semibold text-accent-green mb-2 tracking-wider">
-        QUESTION {questionNumber} / {totalQuestions}
-      </p>
+      <div className="flex items-center justify-between mb-2">
+        <p className="text-sm font-semibold text-accent-green tracking-wider">
+          QUESTION {questionNumber} / {totalQuestions}
+        </p>
+        {onBack && (
+          <button
+            onClick={onBack}
+            className="text-sm font-semibold text-primary/60 hover:text-primary transition-colors focus:outline-none focus:underline"
+          >
+            &larr; Back
+          </button>
+        )}
+      </div>
       <h2 className="text-2xl sm:text-3xl font-serif text-primary mb-10 leading-tight">
         {question.text}
       </h2>
 
       <div className="space-y-3">
-        {ratings.map(({ score, label }, index) => (
+        {ratings.map(({ score, label, hint }, index) => (
           <button
             key={score}
             onClick={() => onAnswer(score)}
@@ -61,7 +73,14 @@ const QuestionComponent: React.FC<QuestionComponentProps> = ({
             }`}
             style={{ animationDelay: `${index * 75}ms` }}
           >
-            <span className="font-bold mr-4 text-base">{label}</span>
+            <span className="block font-bold text-base">{label}</span>
+            <span
+              className={`block text-sm mt-0.5 ${
+                currentAnswer === score ? "text-white/85" : "text-primary/60"
+              }`}
+            >
+              {hint}
+            </span>
           </button>
         ))}
       </div>

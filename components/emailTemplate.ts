@@ -5,6 +5,8 @@
 const SITE_URL = "https://soul-structure-one-pillar.vercel.app";
 const WORKSHOP_URL = "https://tosinsanni.com/soul-structure-experience/";
 
+import { getFocusArea } from "../constants.ts";
+
 const c = {
   page: "#F4F1EA",
   card: "#FFFFFF",
@@ -68,6 +70,7 @@ export function buildSoulStructureEmail(
     })
     .join("");
 
+  const focus = getFocusArea(categoryScores);
   const overall = interpretation.state as string;
   const stateColor = interpretation.color as string;
 
@@ -161,6 +164,24 @@ export function buildSoulStructureEmail(
               </table>
             </td>
           </tr>
+
+          <!-- Reflection -->
+          ${
+            focus.prompt
+              ? `<tr>
+            <td class="px" style="padding:12px 48px 28px 48px;">
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:${c.oliveTint}; border-radius:16px;">
+                <tr>
+                  <td style="padding:24px 26px;">
+                    <p style="margin:0 0 8px 0; font-family:${sans}; font-size:12px; letter-spacing:2px; text-transform:uppercase; color:${c.oliveDark};">A gentle practice for ${escapeHtml(focus.category)}</p>
+                    <p style="margin:0; font-family:${serif}; font-size:17px; line-height:28px; color:${c.ink};">${escapeHtml(focus.prompt)}</p>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>`
+              : ""
+          }
 
           <!-- Divider -->
           <tr>

@@ -57,6 +57,12 @@ const App: React.FC = () => {
     });
   };
 
+  const handleBack = () => {
+    if (currentQuestionIndex > 0) {
+      setCurrentQuestionIndex(currentQuestionIndex - 1);
+    }
+  };
+
   const handleRestart = () => {
     setAnswers([]);
     setCurrentQuestionIndex(0);
@@ -97,6 +103,10 @@ const App: React.FC = () => {
         personalized interpretation and an intentional path to nurture a
         grounded, grace-filled sense of self.
       </p>
+      <p className="mt-5 max-w-prose font-serif italic text-primary/75">
+        There are no right or wrong answers. Answer as you are today, not as
+        you wish to be. It takes about 3 minutes.
+      </p>
       <button
         onClick={handleStart}
         className="mt-8 bg-accent-green text-white font-bold py-3 px-10 rounded-xl text-lg hover:bg-accent-green/90 transition-all duration-300 transform hover:-translate-y-0.5 shadow-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-accent-green/80"
@@ -136,6 +146,7 @@ const App: React.FC = () => {
             questionNumber={currentQuestionIndex + 1}
             totalQuestions={ASSESSMENT_QUESTIONS.length}
             onAnswer={handleAnswer}
+            onBack={currentQuestionIndex > 0 ? handleBack : undefined}
             currentAnswer={answers[currentQuestionIndex]}
           />
         ) : (

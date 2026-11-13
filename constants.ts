@@ -116,3 +116,24 @@ export const getInterpretationByScore = (
     return SCORE_INTERPRETATIONS[PillarState.Unsteady];
   return SCORE_INTERPRETATIONS[PillarState.Fragile];
 };
+
+// A gentle weekly practice, matched to the person's lowest-scoring area.
+export const REFLECTION_PROMPTS: { [category: string]: string } = {
+  Authenticity:
+    "This week, notice one moment you were tempted to shrink or hide part of yourself to fit in. Next time, try showing up as you truly are — even in a small way.",
+  "Self-Compassion & Worth":
+    "This week, when you catch yourself being harsh with yourself, pause and ask: “What would I say to someone I love in this moment?” Then say that to yourself.",
+  "Self-Care":
+    "This week, notice one moment you ignored a need — rest, food, or joy — and gently honour it the next time it comes up.",
+  "Growth & Becoming":
+    "This week, write down one way you've grown that the people around you may not have noticed yet. Let yourself be proud of who you are becoming.",
+};
+
+export const getFocusArea = (
+  categoryScores: Record<string, number>
+): { category: string; prompt: string } => {
+  const [category] = Object.entries(categoryScores).reduce((lowest, entry) =>
+    entry[1] < lowest[1] ? entry : lowest
+  );
+  return { category, prompt: REFLECTION_PROMPTS[category] ?? "" };
+};
