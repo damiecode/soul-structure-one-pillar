@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { Result } from "../types";
 import { buildSoulStructureEmail } from "./emailTemplate.ts";
 import CategoryBar from "./CategoryBar.tsx";
-import { getFocusArea } from "../constants.ts";
 
 const WORKSHOP_URL = "https://tosinsanni.com/soul-structure-experience/";
 
@@ -23,7 +22,6 @@ const ResultsComponent: React.FC<ResultsComponentProps> = ({
   const [statusMessage, setStatusMessage] = useState("");
 
   const { interpretation, categoryScores } = result;
-  const focus = getFocusArea(categoryScores);
 
   const handleSendEmail = async (e?: React.FormEvent) => {
     e?.preventDefault();
@@ -98,18 +96,6 @@ const ResultsComponent: React.FC<ResultsComponentProps> = ({
           ))}
         </div>
       </div>
-
-      {/* Reflection */}
-      {focus.prompt && (
-        <div className="mt-10 rounded-2xl bg-accent-green/10 p-6">
-          <p className="text-xs font-semibold tracking-wider text-accent-green uppercase">
-            A gentle practice for {focus.category}
-          </p>
-          <p className="mt-2 font-serif text-lg leading-relaxed text-primary">
-            {focus.prompt}
-          </p>
-        </div>
-      )}
 
       {/* Email */}
       <div className="mt-10 rounded-2xl bg-white/70 border border-gray-200 p-6 sm:p-8">
