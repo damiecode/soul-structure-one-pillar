@@ -16,7 +16,7 @@ export function buildSoulStructureEmail(
             data: Object.values(categoryScores).map((v: any) =>
               Number(Number(v).toFixed(1))
             ),
-            backgroundColor: "#6A994E",
+            backgroundColor: "#8A9A5B",
             borderRadius: 8,
             barThickness: 40,
           },
@@ -51,7 +51,7 @@ export function buildSoulStructureEmail(
             backgroundColor: "rgba(42, 42, 42, 0.9)",
             titleColor: "#ffffff",
             bodyColor: "#ffffff",
-            borderColor: "#6A994E",
+            borderColor: "#8A9A5B",
             borderWidth: 2,
             padding: 12,
             displayColors: false,
@@ -101,7 +101,7 @@ export function buildSoulStructureEmail(
             </div>
           </td>
           <td style="padding:16px 20px; text-align:right; border-bottom:1px solid #f0ede8;">
-            <span style="font-weight:700; color:#6A994E; font-size:18px;">
+            <span style="font-weight:700; color:#8A9A5B; font-size:18px;">
               ${Number(value).toFixed(1)}
             </span>
             <span style="color:#8c837b; font-size:14px;"> / 5.0</span>
@@ -125,7 +125,7 @@ export function buildSoulStructureEmail(
                   border-radius:24px; overflow:hidden; box-shadow:0 10px 40px rgba(0,0,0,0.1); border:1px solid rgba(255,255,255,0.5);">
         
         <!-- Header -->
-        <div style="background:linear-gradient(135deg, #6A994E 0%, #81B29A 100%); padding:48px 32px; text-align:center;">
+        <div style="background:linear-gradient(135deg, #6B7A3A 0%, #8A9A5B 100%); padding:48px 32px; text-align:center;">
           <div style="background-color:rgba(255,255,255,0.95); display:inline-block; padding:16px 32px; border-radius:16px; margin-bottom:20px;">
             <h1 style="margin:0; font-size:28px; color:#2a2a2a; font-weight:900; letter-spacing:-0.5px;">
               Soul Structure Results
