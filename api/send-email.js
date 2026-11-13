@@ -1,6 +1,5 @@
 export const runtime = "nodejs";
 import { Resend } from "resend";
-import md5 from "md5";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 const VERIFIED_FROM_EMAIL = "results@tosinsanni.com";
@@ -41,61 +40,40 @@ export default async function handler(req, res) {
       });
     }
 
-    // Add to Mailchimp
-    const mailchimpBody = {
-      email_address: to,
-      status: "subscribed",
-    };
+    // Add to Flodesk (non-blocking: the results email has already been sent)
+    try {
+      const flodeskAuth = Buffer.from(
+        `${process.env.FLODESK_API_KEY}:`
+      ).toString("base64");
 
-    if (name && name.trim()) {
-      mailchimpBody.merge_fields = { FNAME: name };
-    }
-
-    const mailchimpResponse = await fetch(
-      `https://${process.env.MAILCHIMP_DC}.api.mailchimp.com/3.0/lists/${process.env.MAILCHIMP_LIST_ID}/members`,
-      {
-        method: "POST",
-        headers: {
-          Authorization: `apikey ${process.env.MAILCHIMP_API_KEY}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(mailchimpBody),
+      const subscriberBody = { email: to };
+      if (name && name.trim()) subscriberBody.first_name = name.trim();
+      if (process.env.FLODESK_SEGMENT_ID) {
+        subscriberBody.segment_ids = [process.env.FLODESK_SEGMENT_ID];
       }
-    );
 
-    const mailchimpResult = await mailchimpResponse.json();
+      const flodeskResponse = await fetch(
+        "https://api.flodesk.com/v1/subscribers",
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Basic ${flodeskAuth}`,
+            "Content-Type": "application/json",
+            "User-Agent": "Soul Structure Workshop (soul-structure-one-pillar.vercel.app)",
+          },
+          body: JSON.stringify(subscriberBody),
+        }
+      );
 
-    if (!mailchimpResponse.ok && mailchimpResult.title !== "Member Exists") {
-      console.error("Mailchimp API Error:", mailchimpResult);
-      return res.status(400).json({
-        message: "Failed to add subscriber to Mailchimp.",
-        details: mailchimpResult,
-      });
-    }
-
-    // Add tag - using md5 package
-    const subscriberHash = md5(to.toLowerCase());
-
-    const tagResponse = await fetch(
-      `https://${process.env.MAILCHIMP_DC}.api.mailchimp.com/3.0/lists/${process.env.MAILCHIMP_LIST_ID}/members/${subscriberHash}/tags`,
-      {
-        method: "POST",
-        headers: {
-          Authorization: `apikey ${process.env.MAILCHIMP_API_KEY}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          tags: [{ name: "SSW Assessment", status: "active" }],
-        }),
+      if (!flodeskResponse.ok) {
+        console.error("Flodesk API Error:", await flodeskResponse.text());
       }
-    );
-
-    if (!tagResponse.ok) {
-      console.error("Mailchimp Tag Error:", await tagResponse.text());
+    } catch (flodeskError) {
+      console.error("Flodesk request failed:", flodeskError);
     }
 
     return res.status(200).json({
-      message: "Email sent, subscriber added, and tag applied successfully!",
+      message: "Email sent successfully!",
       data,
     });
   } catch (error) {

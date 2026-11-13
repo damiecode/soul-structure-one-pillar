@@ -30,7 +30,7 @@ const ResultsComponent: React.FC<ResultsComponentProps> = ({
     setEmailStatus("sending");
     setStatusMessage("");
     const endpoint = "/api/send-email";
-    const subject = "Your Soul Structure: Connection Pillar Results";
+    const subject = "Your Soul Structure: Identity Pillar Results";
 
     const htmlBody = buildSoulStructureEmail(interpretation, categoryScores);
 
@@ -70,12 +70,12 @@ const ResultsComponent: React.FC<ResultsComponentProps> = ({
             Your Assessment is Complete! 🎉
           </h2>
           <p className="text-primary/90 mb-6 text-lg leading-relaxed max-w-2xl mx-auto">
-            Thank you for taking the Connection Pillar Assessment. Your
+            Thank you for taking the Identity Pillar Assessment. Your
             personalized results are ready!
           </p>
           <p className="text-primary/80 mb-8 max-w-2xl mx-auto">
             Enter your email below to receive your detailed Soul Structure
-            insights, including your pillar state and connection profile
+            insights, including your pillar state and identity profile
             breakdown.
           </p>
           <div className="bg-accent-green/5 border border-accent-green/20 rounded-xl p-6 mb-8 max-w-2xl mx-auto">

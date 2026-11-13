@@ -12,7 +12,7 @@ export function buildSoulStructureEmail(
         labels: Object.keys(categoryScores),
         datasets: [
           {
-            label: "Connection Pillar Scores",
+            label: "Identity Pillar Scores",
             data: Object.values(categoryScores),
             backgroundColor: "#6A994E",
             borderRadius: 8,
@@ -130,7 +130,7 @@ export function buildSoulStructureEmail(
             </h1>
           </div>
           <p style="margin:0; color:#ffffff; font-size:16px; font-weight:600; opacity:0.95;">
-            Connection Pillar Assessment
+            Identity Pillar Assessment
           </p>
         </div>
 
@@ -164,11 +164,11 @@ export function buildSoulStructureEmail(
           <!-- Chart Section -->
           <div style="text-align:center; margin-bottom:40px;">
             <h3 style="font-size:24px; color:#2a2a2a; margin-bottom:24px; font-weight:700;">
-              Your Connection Profile
+              Your Identity Profile
             </h3>
             <div style="background-color:#ffffff; padding:24px; border-radius:16px;
                         box-shadow:0 2px 8px rgba(0,0,0,0.05); border:1px solid #f0ede8;">
-              <img src="${chartUrl}" alt="Connection Pillar Results Chart"
+              <img src="${chartUrl}" alt="Identity Pillar Results Chart"
                    style="width:100%; max-width:550px; border-radius:12px; margin:auto; display:block;" />
             </div>
           </div>
@@ -216,7 +216,7 @@ export function buildSoulStructureEmail(
         <!-- Footer -->
         <div style="background-color:#2a2a2a; padding:32px; text-align:center; color:#ffffff;">
           <p style="margin:0 0 8px 0; font-size:14px; opacity:0.9;">
-            Thank you for taking the Connection Pillar Assessment
+            Thank you for taking the Identity Pillar Assessment
           </p>
           <p style="margin:0 0 20px 0; font-size:13px; opacity:0.7;">
             © ${new Date().getFullYear()} Soul Structure Workshop. All rights reserved.
