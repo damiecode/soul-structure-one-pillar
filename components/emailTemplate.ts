@@ -13,7 +13,9 @@ export function buildSoulStructureEmail(
         datasets: [
           {
             label: "Identity Pillar Scores",
-            data: Object.values(categoryScores),
+            data: Object.values(categoryScores).map((v: any) =>
+              Number(Number(v).toFixed(1))
+            ),
             backgroundColor: "#6A994E",
             borderRadius: 8,
             barThickness: 40,
@@ -201,7 +203,7 @@ export function buildSoulStructureEmail(
               This result is just the beginning. The Soul Structure Workshop offers a deep dive into all 
               pillars of your being, providing the tools and resources to build a life of purpose and wholeness.
             </p>
-            <a href="https://tosinsanni.com/soulstructureworkshop/"
+            <a href="https://tosinsanni.com/soul-structure-experience/"
                style="background:linear-gradient(135deg, #F4A261 0%, #E9B872 100%); 
                       color:#ffffff; padding:18px 40px; border-radius:12px; 
                       text-decoration:none; font-weight:700; font-size:17px;

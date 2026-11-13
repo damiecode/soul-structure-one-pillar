@@ -53,7 +53,7 @@ const ResultsComponent: React.FC<ResultsComponentProps> = ({
       setEmailStatus("sent");
       setStatusMessage("Success! Your results have been sent to your email.");
       setTimeout(() => {
-        window.location.href = "https://tosinsanni.com/soulstructureworkshop/";
+        window.location.href = "https://tosinsanni.com/soul-structure-experience/";
       }, 2000); // 2 seconds delay
     } catch (error) {
       console.error("Failed to send email:", error);
@@ -128,7 +128,7 @@ const ResultsComponent: React.FC<ResultsComponentProps> = ({
               wholeness.
             </p>
             <a
-              href="https://tosinsanni.com/soulstructureworkshop/"
+              href="https://tosinsanni.com/soul-structure-experience/"
               target="_blank"
               rel="noopener noreferrer"
               className="inline-block bg-accent-gold text-white font-bold py-3 px-10 rounded-xl text-lg hover:bg-accent-gold/90 transition-all duration-300 transform hover:-translate-y-0.5 shadow-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-accent-gold/80"
@@ -149,7 +149,7 @@ const ResultsComponent: React.FC<ResultsComponentProps> = ({
           </p>
           <div className="flex justify-center gap-3 flex-wrap">
             <a
-              href="https://tosinsanni.com/soulstructureworkshop/"
+              href="https://tosinsanni.com/soul-structure-experience/"
               target="_blank"
               rel="noopener noreferrer"
               className="bg-accent-gold text-white px-6 py-3 rounded-lg font-bold hover:bg-accent-gold/90 transition"
