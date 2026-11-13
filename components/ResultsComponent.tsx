@@ -32,7 +32,11 @@ const ResultsComponent: React.FC<ResultsComponentProps> = ({
     const endpoint = "/api/send-email";
     const subject = "Your Soul Structure: Identity Pillar Results";
 
-    const htmlBody = buildSoulStructureEmail(interpretation, categoryScores);
+    const htmlBody = buildSoulStructureEmail(
+      interpretation,
+      categoryScores,
+      name
+    );
 
     try {
       const response = await fetch(endpoint, {

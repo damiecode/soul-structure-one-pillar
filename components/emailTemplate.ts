@@ -1,245 +1,212 @@
-// /lib/emailTemplates.ts
-import { brand } from "./brandStyle";
+// Results email for the Identity Pillar assessment.
+// Built with tables and inline styles so it renders well in Gmail, Apple Mail
+// and Outlook, and reads comfortably on phones.
+
+const SITE_URL = "https://soul-structure-one-pillar.vercel.app";
+const WORKSHOP_URL = "https://tosinsanni.com/soul-structure-experience/";
+
+const c = {
+  page: "#F4F1EA",
+  card: "#FFFFFF",
+  cream: "#FAF7F1",
+  ink: "#2F2A24",
+  body: "#4A443C",
+  muted: "#8C8378",
+  line: "#ECE6DB",
+  olive: "#8A9A5B",
+  oliveDark: "#5F6B3A",
+  oliveTint: "#EEF0E4",
+  gold: "#C9A46A",
+};
+
+const serif = "Georgia, 'Times New Roman', serif";
+const sans =
+  "-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif";
+
+const escapeHtml = (s: string) =>
+  s.replace(/[&<>"']/g, (ch) =>
+    ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[
+      ch
+    ] as string)
+  );
 
 export function buildSoulStructureEmail(
   interpretation: any,
-  categoryScores: any
+  categoryScores: Record<string, number>,
+  name?: string
 ) {
-  const chartUrl = `https://quickchart.io/chart?v=4&c=${encodeURIComponent(
-    JSON.stringify({
-      type: "bar",
-      data: {
-        labels: Object.keys(categoryScores),
-        datasets: [
-          {
-            label: "Identity Pillar Scores",
-            data: Object.values(categoryScores).map((v: any) =>
-              Number(Number(v).toFixed(1))
-            ),
-            backgroundColor: "#8A9A5B",
-            borderRadius: 8,
-            barThickness: 40,
-          },
-        ],
-      },
-      options: {
-        scales: {
-          y: {
-            type: "linear",
-            min: 1,
-            max: 5,
-            ticks: {
-              stepSize: 0.5,
-              font: { size: 14 },
-            },
-            grid: {
-              color: "rgba(0,0,0,0.05)",
-            },
-          },
-          x: {
-            grid: { display: false },
-            ticks: {
-              font: { size: 12 },
-            },
-          },
-        },
-        plugins: {
-          legend: { display: false },
-          title: { display: false },
-          tooltip: {
-            enabled: true,
-            backgroundColor: "rgba(42, 42, 42, 0.9)",
-            titleColor: "#ffffff",
-            bodyColor: "#ffffff",
-            borderColor: "#8A9A5B",
-            borderWidth: 2,
-            padding: 12,
-            displayColors: false,
-            callbacks: {
-              title: function (context) {
-                return context[0].label;
-              },
-              label: function (context) {
-                return "Score: " + context.parsed.y.toFixed(1) + " / 5.0";
-              },
-            },
-          },
-          datalabels: {
-            anchor: "end",
-            align: "top",
-            color: "#2a2a2a",
-            font: {
-              size: 14,
-              weight: "bold",
-            },
-            formatter: function (value) {
-              return value.toFixed(1);
-            },
-          },
-        },
-      },
-    })
-  )}`;
+  const firstName = name?.trim() ? escapeHtml(name.trim().split(/\s+/)[0]) : "";
+  const greeting = firstName ? `Dear ${firstName},` : "Hello,";
 
-  const categoryIcons = {
-    "Trust & Safety": "🛡️",
-    "Boundaries & Balance": "⚖️",
-    "Mutual Support": "🤝",
-    "Authentic Expression": "💬",
-  };
-
-  const categoryRows = Object.entries(categoryScores)
-    .map(
-      ([key, value]: [string, any]) => `
+  const scoreRows = Object.entries(categoryScores)
+    .map(([label, raw]) => {
+      const score = Math.round(Number(raw) * 10) / 10;
+      // Bar width as a share of the 1–5 scale
+      const pct = Math.max(4, Math.min(100, Math.round(((score - 1) / 4) * 100)));
+      return `
         <tr>
-          <td style="padding:16px 20px; border-bottom:1px solid #f0ede8;">
-            <div style="display:flex; align-items:center; gap:12px;">
-              <span style="font-size:24px;">${
-                categoryIcons[key as keyof typeof categoryIcons] || "✨"
-              }</span>
-              <span style="font-size:16px; color:#2a2a2a; font-weight:600;">${key}</span>
-            </div>
+          <td style="padding:0 0 22px 0;">
+            <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+                <td style="font-family:${sans}; font-size:15px; color:${c.ink}; padding:0 0 8px 0;">
+                  ${escapeHtml(label)}
+                </td>
+                <td align="right" style="font-family:${sans}; font-size:15px; color:${c.oliveDark}; font-weight:bold; padding:0 0 8px 0; white-space:nowrap;">
+                  ${score.toFixed(1)}<span style="color:${c.muted}; font-weight:normal;"> / 5</span>
+                </td>
+              </tr>
+              <tr>
+                <td colspan="2" style="background:${c.oliveTint}; border-radius:6px; height:10px; line-height:10px; font-size:0;">
+                  <table role="presentation" width="${pct}%" cellpadding="0" cellspacing="0" border="0">
+                    <tr><td style="background:${c.olive}; border-radius:6px; height:10px; line-height:10px; font-size:0;">&nbsp;</td></tr>
+                  </table>
+                </td>
+              </tr>
+            </table>
           </td>
-          <td style="padding:16px 20px; text-align:right; border-bottom:1px solid #f0ede8;">
-            <span style="font-weight:700; color:#8A9A5B; font-size:18px;">
-              ${Number(value).toFixed(1)}
-            </span>
-            <span style="color:#8c837b; font-size:14px;"> / 5.0</span>
-          </td>
-        </tr>`
-    )
+        </tr>`;
+    })
     .join("");
 
-  return `
-  <!DOCTYPE html>
-  <html lang="en">
-  <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Your Soul Structure Results</title>
-  </head>
-  <body style="margin:0; padding:0; background-color:#f5f3f0; font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;">
-    
-    <div style="background-color:#f5f3f0; padding:40px 20px;">
-      <div style="max-width:650px; margin:0 auto; background:linear-gradient(135deg, #fdfcfb 0%, #f5f3f0 100%); 
-                  border-radius:24px; overflow:hidden; box-shadow:0 10px 40px rgba(0,0,0,0.1); border:1px solid rgba(255,255,255,0.5);">
-        
-        <!-- Header -->
-        <div style="background:linear-gradient(135deg, #6B7A3A 0%, #8A9A5B 100%); padding:48px 32px; text-align:center;">
-          <div style="background-color:rgba(255,255,255,0.95); display:inline-block; padding:16px 32px; border-radius:16px; margin-bottom:20px;">
-            <h1 style="margin:0; font-size:28px; color:#2a2a2a; font-weight:900; letter-spacing:-0.5px;">
-              Soul Structure Results
-            </h1>
-          </div>
-          <p style="margin:0; color:#ffffff; font-size:16px; font-weight:600; opacity:0.95;">
-            Identity Pillar Assessment
-          </p>
-        </div>
+  const overall = interpretation.state as string;
+  const stateColor = interpretation.color as string;
 
-        <!-- Main Content -->
-        <div style="padding:40px 32px;">
-          
-          <!-- Pillar State Badge -->
-          <div style="text-align:center; margin-bottom:32px;">
-            <div style="background-color:${
-              interpretation.color
-            }; color:#ffffff; 
-                        padding:16px 32px; border-radius:50px; display:inline-block;
-                        box-shadow:0 4px 12px rgba(0,0,0,0.15);">
-              <h2 style="margin:0; font-size:22px; font-weight:700; letter-spacing:0.5px;">
-                ${interpretation.state} Pillar
-              </h2>
-            </div>
-          </div>
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="color-scheme" content="light">
+  <meta name="supported-color-schemes" content="light">
+  <title>Your Identity Pillar Results</title>
+  <style>
+    @media only screen and (max-width: 600px) {
+      .container { width: 100% !important; }
+      .px { padding-left: 24px !important; padding-right: 24px !important; }
+      .h1 { font-size: 28px !important; line-height: 34px !important; }
+      .btn a { display: block !important; }
+    }
+  </style>
+</head>
+<body style="margin:0; padding:0; background:${c.page}; -webkit-text-size-adjust:100%;">
+  <div style="display:none; max-height:0; overflow:hidden; opacity:0;">
+    Your Identity Pillar result is ${escapeHtml(overall)} — here's what it means for you.
+  </div>
 
-          <!-- Narrative -->
-          <div style="background-color:#ffffff; padding:28px; border-radius:16px; margin-bottom:40px;
-                      box-shadow:0 2px 8px rgba(0,0,0,0.05); border:1px solid #f0ede8;">
-            <p style="font-size:16px; line-height:1.8; color:#2a2a2a; margin:0; text-align:left;">
-              ${interpretation.narrative}
-            </p>
-          </div>
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:${c.page};">
+    <tr>
+      <td align="center" style="padding:32px 12px;">
 
-          <!-- Divider -->
-          <div style="border-top:2px solid #f0ede8; margin:40px 0;"></div>
+        <table role="presentation" class="container" width="600" cellpadding="0" cellspacing="0" border="0" style="width:600px; max-width:600px; background:${c.card}; border-radius:20px; overflow:hidden;">
 
-          <!-- Chart Section -->
-          <div style="text-align:center; margin-bottom:40px;">
-            <h3 style="font-size:24px; color:#2a2a2a; margin-bottom:24px; font-weight:700;">
-              Your Identity Profile
-            </h3>
-            <div style="background-color:#ffffff; padding:24px; border-radius:16px;
-                        box-shadow:0 2px 8px rgba(0,0,0,0.05); border:1px solid #f0ede8;">
-              <img src="${chartUrl}" alt="Identity Pillar Results Chart"
-                   style="width:100%; max-width:550px; border-radius:12px; margin:auto; display:block;" />
-            </div>
-          </div>
+          <!-- Logo -->
+          <tr>
+            <td align="center" class="px" style="padding:40px 48px 8px 48px;">
+              <img src="${SITE_URL}/email_logo.png" alt="Tosin Sanni" width="220" style="width:220px; max-width:70%; height:auto; display:block; border:0;">
+            </td>
+          </tr>
 
-          <!-- Category Breakdown -->
-          <div style="margin-bottom:40px;">
-            <h3 style="font-size:22px; color:#2a2a2a; margin-bottom:20px; text-align:center; font-weight:700;">
-              Detailed Breakdown
-            </h3>
-            <div style="background-color:#ffffff; border-radius:16px; overflow:hidden;
-                        box-shadow:0 2px 8px rgba(0,0,0,0.05); border:1px solid #f0ede8;">
-              <table style="width:100%; border-collapse:collapse;">
-                <tbody>
-                  ${categoryRows}
-                </tbody>
+          <!-- Heading -->
+          <tr>
+            <td align="center" class="px" style="padding:16px 48px 0 48px;">
+              <p style="margin:0; font-family:${sans}; font-size:12px; letter-spacing:2px; text-transform:uppercase; color:${c.olive};">
+                Identity Pillar &middot; Self-Relationship
+              </p>
+              <h1 class="h1" style="margin:12px 0 0 0; font-family:${serif}; font-weight:normal; font-size:32px; line-height:40px; color:${c.ink};">
+                Your results are here
+              </h1>
+            </td>
+          </tr>
+
+          <!-- Greeting -->
+          <tr>
+            <td class="px" style="padding:28px 48px 0 48px;">
+              <p style="margin:0 0 12px 0; font-family:${sans}; font-size:16px; line-height:26px; color:${c.body};">${greeting}</p>
+              <p style="margin:0; font-family:${sans}; font-size:16px; line-height:26px; color:${c.body};">
+                Thank you for taking a quiet moment to reflect on your relationship with yourself. Whatever your result, it is not a verdict — it's an honest snapshot of where you are today, and a gentle guide for where to go next.
+              </p>
+            </td>
+          </tr>
+
+          <!-- Result -->
+          <tr>
+            <td class="px" style="padding:32px 48px 0 48px;">
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:${c.cream}; border-radius:16px;">
+                <tr>
+                  <td align="center" style="padding:32px 28px 8px 28px;">
+                    <p style="margin:0; font-family:${sans}; font-size:12px; letter-spacing:2px; text-transform:uppercase; color:${c.muted};">Your pillar state</p>
+                    <p style="margin:12px 0 0 0; font-family:${serif}; font-size:30px; line-height:36px; color:${c.ink};">
+                      <span style="display:inline-block; width:12px; height:12px; border-radius:6px; background:${stateColor}; vertical-align:middle; margin-right:10px;"></span>${escapeHtml(overall)}
+                    </p>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="padding:20px 28px 32px 28px;">
+                    <p style="margin:0; font-family:${serif}; font-size:17px; line-height:29px; color:${c.body};">
+                      ${escapeHtml(interpretation.narrative)}
+                    </p>
+                  </td>
+                </tr>
               </table>
-            </div>
-          </div>
+            </td>
+          </tr>
+
+          <!-- Breakdown -->
+          <tr>
+            <td class="px" style="padding:40px 48px 0 48px;">
+              <h2 style="margin:0 0 6px 0; font-family:${serif}; font-weight:normal; font-size:22px; line-height:30px; color:${c.ink};">Your identity profile</h2>
+              <p style="margin:0 0 24px 0; font-family:${sans}; font-size:14px; line-height:22px; color:${c.muted};">How you scored across each area, on a scale of 1 to 5.</p>
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+                ${scoreRows}
+              </table>
+            </td>
+          </tr>
 
           <!-- Divider -->
-          <div style="border-top:2px solid #f0ede8; margin:40px 0;"></div>
+          <tr>
+            <td class="px" style="padding:12px 48px 0 48px;">
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td style="border-top:1px solid ${c.line}; font-size:0; line-height:0;">&nbsp;</td></tr></table>
+            </td>
+          </tr>
 
-          <!-- Call to Action -->
-          <div style="text-align:center; background:linear-gradient(135deg, #fdfcfb 0%, #f9f7f4 100%); 
-                      padding:40px 32px; border-radius:16px; border:1px solid #f0ede8;">
-            <h3 style="font-size:24px; color:#2a2a2a; margin-bottom:16px; font-weight:700;">
-              Continue Your Journey
-            </h3>
-            <p style="font-size:16px; color:#5a5550; line-height:1.7; margin-bottom:28px; max-width:500px; margin-left:auto; margin-right:auto;">
-              This result is just the beginning. The Soul Structure Workshop offers a deep dive into all 
-              pillars of your being, providing the tools and resources to build a life of purpose and wholeness.
-            </p>
-            <a href="https://tosinsanni.com/soul-structure-experience/"
-               style="background:linear-gradient(135deg, #F4A261 0%, #E9B872 100%); 
-                      color:#ffffff; padding:18px 40px; border-radius:12px; 
-                      text-decoration:none; font-weight:700; font-size:17px;
-                      display:inline-block; box-shadow:0 4px 12px rgba(244,162,97,0.3);
-                      transition:all 0.3s;">
-               Register for the Workshop →
-            </a>
-          </div>
+          <!-- CTA -->
+          <tr>
+            <td align="center" class="px" style="padding:36px 48px 44px 48px;">
+              <h2 style="margin:0 0 12px 0; font-family:${serif}; font-weight:normal; font-size:24px; line-height:32px; color:${c.ink};">Continue your journey</h2>
+              <p style="margin:0 0 28px 0; font-family:${sans}; font-size:15px; line-height:25px; color:${c.body};">
+                This is one of seven pillars. The Soul Structure Experience takes you through all of them, with the tools and support to build a life of wholeness and purpose.
+              </p>
+              <table role="presentation" class="btn" cellpadding="0" cellspacing="0" border="0">
+                <tr>
+                  <td align="center" style="background:${c.olive}; border-radius:999px;">
+                    <a href="${WORKSHOP_URL}" style="display:inline-block; padding:16px 36px; font-family:${sans}; font-size:16px; font-weight:bold; color:#FFFFFF; text-decoration:none; border-radius:999px;">
+                      Join the experience
+                    </a>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
 
-        </div>
+          <!-- Footer -->
+          <tr>
+            <td align="center" class="px" style="background:${c.cream}; padding:28px 48px; border-top:1px solid ${c.line};">
+              <p style="margin:0 0 6px 0; font-family:${serif}; font-style:italic; font-size:15px; color:${c.body};">With grace, Tosin Sanni</p>
+              <p style="margin:0 0 16px 0; font-family:${sans}; font-size:12px; line-height:18px; color:${c.muted};">
+                &copy; ${new Date().getFullYear()} Soul Structure Workshop
+              </p>
+              <p style="margin:0; font-family:${sans}; font-size:11px; line-height:17px; color:${c.muted};">
+                You're receiving this because you took the assessment on our website.<br>
+                Tosin Sanni &middot; Chief Retin Obasuyi St 9, Maryland, Lagos 100211, Nigeria
+              </p>
+            </td>
+          </tr>
 
-        <!-- Footer -->
-        <div style="background-color:#2a2a2a; padding:32px; text-align:center; color:#ffffff;">
-          <p style="margin:0 0 8px 0; font-size:14px; opacity:0.9;">
-            Thank you for taking the Identity Pillar Assessment
-          </p>
-          <p style="margin:0 0 20px 0; font-size:13px; opacity:0.7;">
-            © ${new Date().getFullYear()} Soul Structure Workshop. All rights reserved.
-          </p>
-          
-          <div style="border-top:1px solid rgba(255,255,255,0.1); padding-top:20px; margin-top:20px;">
-            <p style="margin:4px 0; font-size:12px; opacity:0.6;">
-              You are receiving this email because you opted in via our website.
-            </p>
-            <p style="margin:12px 0 4px 0; font-size:12px; opacity:0.6; font-weight:600;">
-              Our mailing address:
-            </p>
-            <p style="margin:2px 0; font-size:12px; opacity:0.6;">Tosin Sanni</p>
-            <p style="margin:2px 0; font-size:12px; opacity:0.6;">Chief Retin Obasuyi St 9</p>
-            <p style="margin:2px 0; font-size:12px; opacity:0.6;">Maryland, Lagos 100211, Nigeria</p>
-          </div>
-        </div>
+        </table>
 
-      </div>
-    </div>
-
-  </body>
-  </html>`;
+      </td>
+    </tr>
+  </table>
+</body>
+</html>`;
 }
