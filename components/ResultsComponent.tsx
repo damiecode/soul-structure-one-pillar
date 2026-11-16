@@ -3,7 +3,7 @@ import { Result } from "../types";
 import { buildSoulStructureEmail } from "./emailTemplate.ts";
 import CategoryBar from "./CategoryBar.tsx";
 
-const WORKSHOP_URL = "https://tosinsanni.com/soul-structure-experience/";
+const EXPERIENCE_URL = "https://tosinsanni.com/soul-structure-experience/";
 
 interface ResultsComponentProps {
   result: Result;
@@ -173,7 +173,7 @@ const ResultsComponent: React.FC<ResultsComponentProps> = ({
           tools and support to build a life of purpose and wholeness.
         </p>
         <a
-          href={WORKSHOP_URL}
+          href={EXPERIENCE_URL}
           target="_blank"
           rel="noopener noreferrer"
           className="inline-block bg-accent-gold text-white font-bold py-3 px-10 rounded-xl text-lg hover:bg-accent-gold/90 transition-all duration-300 transform hover:-translate-y-0.5 shadow-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-accent-gold/80"

@@ -84,7 +84,7 @@ const App: React.FC = () => {
         />
         <img
           src="/ts_logo.png"
-          alt="Soul Structure Workshop Logo"
+          alt="Soul Structure Experience Logo"
           className="h-20 w-auto"
         />
       </div>
@@ -92,7 +92,7 @@ const App: React.FC = () => {
         Identity Pillar Assessment
       </h1>
       <p className="text-lg text-primary/80 mt-2 max-w-xl mx-auto">
-        From the Soul Structure Workshop
+        From the Soul Structure Experience
       </p>
       <p className="mt-6 max-w-prose text-primary/90 leading-relaxed">
         This confidential assessment invites you to reflect on the health of
@@ -127,7 +127,7 @@ const App: React.FC = () => {
           />
           <img
             src="/ts_logo.png"
-            alt="Soul Structure Workshop Logo"
+            alt="Soul Structure Experience Logo"
             className="h-20 w-auto"
           />
         </div>
@@ -135,7 +135,7 @@ const App: React.FC = () => {
           Identity Pillar Assessment
         </h1>
         <p className="text-lg text-primary/80 mt-2 max-w-xl mx-auto">
-          A self-assessment from the Soul Structure Workshop
+          A self-assessment from the Soul Structure Experience
         </p>
       </header>
       <div className="relative">
@@ -162,7 +162,7 @@ const App: React.FC = () => {
         {appState === "home" ? renderHomeScreen() : renderAssessment()}
         <footer className="text-center mt-8 text-primary/60 text-sm">
           <p>
-            &copy; {new Date().getFullYear()} Soul Structure Workshop. All
+            &copy; {new Date().getFullYear()} Soul Structure Experience. All
             rights reserved.
           </p>
         </footer>

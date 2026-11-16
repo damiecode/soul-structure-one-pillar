@@ -3,7 +3,7 @@
 // and Outlook, and reads comfortably on phones.
 
 const SITE_URL = "https://soul-structure-one-pillar.vercel.app";
-const WORKSHOP_URL = "https://tosinsanni.com/soul-structure-experience/";
+const EXPERIENCE_URL = "https://tosinsanni.com/soul-structure-experience/";
 
 const c = {
   page: "#F4F1EA",
@@ -179,7 +179,7 @@ export function buildSoulStructureEmail(
               <table role="presentation" class="btn" cellpadding="0" cellspacing="0" border="0">
                 <tr>
                   <td align="center" style="background:${c.olive}; border-radius:999px;">
-                    <a href="${WORKSHOP_URL}" style="display:inline-block; padding:16px 36px; font-family:${sans}; font-size:16px; font-weight:bold; color:#FFFFFF; text-decoration:none; border-radius:999px;">
+                    <a href="${EXPERIENCE_URL}" style="display:inline-block; padding:16px 36px; font-family:${sans}; font-size:16px; font-weight:bold; color:#FFFFFF; text-decoration:none; border-radius:999px;">
                       Join the experience
                     </a>
                   </td>
@@ -193,7 +193,7 @@ export function buildSoulStructureEmail(
             <td align="center" class="px" style="background:${c.cream}; padding:28px 48px; border-top:1px solid ${c.line};">
               <p style="margin:0 0 6px 0; font-family:${serif}; font-style:italic; font-size:15px; color:${c.body};">With grace, Tosin Sanni</p>
               <p style="margin:0 0 16px 0; font-family:${sans}; font-size:12px; line-height:18px; color:${c.muted};">
-                &copy; ${new Date().getFullYear()} Soul Structure Workshop
+                &copy; ${new Date().getFullYear()} Soul Structure Experience
               </p>
               <p style="margin:0; font-family:${sans}; font-size:11px; line-height:17px; color:${c.muted};">
                 You're receiving this because you took the assessment on our website.<br>

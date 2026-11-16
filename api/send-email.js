@@ -25,7 +25,7 @@ export default async function handler(req, res) {
 
     // Send email via Resend
     const { data, error } = await resend.emails.send({
-      from: `Soul Structure Workshop <${VERIFIED_FROM_EMAIL}>`,
+      from: `Soul Structure Experience <${VERIFIED_FROM_EMAIL}>`,
       to: to,
       subject,
       text: body || "Please view this email in an HTML-compatible client.",
@@ -49,7 +49,7 @@ export default async function handler(req, res) {
       const flodeskHeaders = {
         Authorization: `Basic ${flodeskAuth}`,
         "Content-Type": "application/json",
-        "User-Agent": "Soul Structure Workshop (soul-structure-one-pillar.vercel.app)",
+        "User-Agent": "Soul Structure Experience (soul-structure-one-pillar.vercel.app)",
       };
 
       const subscriberBody = { email: to };
