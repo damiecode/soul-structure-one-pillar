@@ -22,6 +22,7 @@ const ResultsComponent: React.FC<ResultsComponentProps> = ({
   const [statusMessage, setStatusMessage] = useState("");
 
   const { interpretation, categoryScores } = result;
+  const unlocked = emailStatus === "sent";
 
   const handleSendEmail = async (e?: React.FormEvent) => {
     e?.preventDefault();
@@ -37,7 +38,7 @@ const ResultsComponent: React.FC<ResultsComponentProps> = ({
     const htmlBody = buildSoulStructureEmail(
       interpretation,
       categoryScores,
-      name
+      name,
     );
 
     try {
@@ -78,35 +79,16 @@ const ResultsComponent: React.FC<ResultsComponentProps> = ({
         </h2>
       </div>
 
-      <p className="mt-6 font-serif text-lg leading-relaxed text-primary/90">
-        {interpretation.narrative}
-      </p>
-
-      {/* Breakdown */}
-      <div className="mt-10">
-        <h3 className="text-xl font-serif text-primary">
-          Your identity profile
-        </h3>
-        <p className="text-sm text-primary/60 mt-1 mb-5">
-          How you scored across each area, on a scale of 1 to 5.
-        </p>
-        <div className="space-y-5">
-          {Object.entries(categoryScores).map(([label, score]) => (
-            <CategoryBar key={label} label={label} score={score} />
-          ))}
-        </div>
-      </div>
-
-      {/* Email */}
-      <div className="mt-10 rounded-2xl bg-white/70 border border-gray-200 p-6 sm:p-8">
-        {emailStatus !== "sent" ? (
-          <>
+      {!unlocked ? (
+        <>
+          {/* Email gate */}
+          <div className="mt-8 rounded-2xl bg-white/80 border border-gray-200 p-6 sm:p-8 relative z-10">
             <h3 className="text-xl font-serif text-primary text-center">
-              Keep a copy of your results
+              Unlock your full results
             </h3>
             <p className="text-primary/70 mt-2 mb-5 text-center">
-              We'll email you your full results to return to whenever you need
-              them.
+              Enter your email to see what your result means and your full score
+              breakdown. We'll send you a copy too.
             </p>
             <form onSubmit={handleSendEmail} className="flex flex-col gap-3">
               <input
@@ -137,7 +119,7 @@ const ResultsComponent: React.FC<ResultsComponentProps> = ({
                 className="w-full bg-primary text-white font-bold py-4 px-8 rounded-lg hover:bg-primary/90 transition-colors disabled:bg-primary/50 disabled:cursor-not-allowed text-lg"
                 disabled={emailStatus === "sending"}
               >
-                {emailStatus === "sending" ? "Sending…" : "Email my results"}
+                {emailStatus === "sending" ? "Sending…" : "Unlock my results"}
               </button>
             </form>
             {emailStatus === "error" && statusMessage && (
@@ -145,22 +127,59 @@ const ResultsComponent: React.FC<ResultsComponentProps> = ({
                 {statusMessage}
               </p>
             )}
-            <p className="mt-4 text-sm text-primary/55 text-center">
-              If you don't see it soon, check your promotions or spam folder.
-            </p>
-          </>
-        ) : (
-          <div className="text-center animate-fade-in">
-            <h3 className="text-xl font-serif text-primary">
-              Your results are on their way
-            </h3>
-            <p className="text-primary/70 mt-2">
-              Check your inbox — and your promotions or spam folder, just in
-              case.
-            </p>
           </div>
-        )}
-      </div>
+
+          {/* Locked preview */}
+          <div
+            className="mt-8 blur-[6px] select-none pointer-events-none opacity-50"
+            aria-hidden="true"
+          >
+            <p className="mt-6 font-serif text-lg leading-relaxed text-primary/90">
+              {interpretation.narrative}
+            </p>
+
+            {/* Breakdown */}
+            <div className="mt-10">
+              <h3 className="text-xl font-serif text-primary">
+                Your identity profile
+              </h3>
+              <p className="text-sm text-primary/60 mt-1 mb-5">
+                How you scored across each area, on a scale of 1 to 5.
+              </p>
+              <div className="space-y-5">
+                {Object.entries(categoryScores).map(([label, score]) => (
+                  <CategoryBar key={label} label={label} score={score} />
+                ))}
+              </div>
+            </div>
+          </div>
+        </>
+      ) : (
+        <>
+          <div className="mt-6 rounded-xl bg-accent-green/10 px-4 py-3 text-center text-sm text-primary/80 animate-fade-in">
+            A copy is on its way to your inbox. Check promotions or spam if you
+            don't see it.
+          </div>
+          <p className="mt-6 font-serif text-lg leading-relaxed text-primary/90">
+            {interpretation.narrative}
+          </p>
+
+          {/* Breakdown */}
+          <div className="mt-10">
+            <h3 className="text-xl font-serif text-primary">
+              Your identity profile
+            </h3>
+            <p className="text-sm text-primary/60 mt-1 mb-5">
+              How you scored across each area, on a scale of 1 to 5.
+            </p>
+            <div className="space-y-5">
+              {Object.entries(categoryScores).map(([label, score]) => (
+                <CategoryBar key={label} label={label} score={score} />
+              ))}
+            </div>
+          </div>
+        </>
+      )}
 
       {/* Continue */}
       <div className="mt-12 pt-8 border-t border-gray-200 text-center">
